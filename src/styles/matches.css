@@ -1,0 +1,403 @@
+/* =========================
+   MATCHES PAGE
+========================= */
+
+.matches-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px 5%;
+  background:
+    radial-gradient(circle at top left, rgba(233, 30, 99, 0.08), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(255, 64, 129, 0.08), transparent 30%),
+    #fafafa;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.matches-hero {
+  text-align: center;
+  margin-bottom: 70px;
+  animation: fadeUp 0.8s ease;
+}
+
+.matches-hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #071330;
+  margin-bottom: 12px;
+}
+
+.matches-hero p {
+  color: #7c8499;
+  font-size: 1.05rem;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.profiles-section {
+  margin-bottom: 80px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+}
+
+.section-head h2 {
+  font-size: 1.8rem;
+  color: #071330;
+  font-weight: 700;
+}
+
+.section-head button {
+  background: transparent;
+  border: none;
+  color: #ff2d7a;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.section-head button:hover {
+  transform: translateX(5px);
+}
+
+/* =========================
+   GRID
+========================= */
+
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.match-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all 0.4s ease;
+  animation: fadeUp 0.8s ease;
+  position: relative;
+}
+
+.match-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 20px 45px rgba(233, 30, 99, 0.15);
+}
+
+/* =========================
+   IMAGE
+========================= */
+
+.match-img-box {
+  position: relative;
+  overflow: hidden;
+  height: 380px;
+}
+
+.match-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.6s ease;
+}
+
+.match-card:hover img {
+  transform: scale(1.08);
+}
+
+.online-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #fff;
+  color: #0cbf61;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 30px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.1);
+}
+
+/* =========================
+   INFO
+========================= */
+
+.match-info {
+  padding: 24px;
+}
+
+.match-info h3 {
+  font-size: 1.4rem;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+
+.match-info p {
+  color: var(--text-muted);
+  margin-bottom: 15px;
+}
+
+.match-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.match-meta span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #5e6578;
+  font-size: 14px;
+}
+
+.match-meta svg {
+  color: #ff2d7a;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.match-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.connect-profile-btn {
+  flex: 1;
+  border: none;
+  height: 50px;
+  border-radius: 30px;
+  background: linear-gradient(135deg,#ff4d94,#ff2d7a);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.connect-profile-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(255,45,122,.35);
+}
+
+.chat-profile-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #ffe0ea;
+  background: white;
+  color: #ff2d7a;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.chat-profile-btn:hover {
+  background: #ff2d7a;
+  color: white;
+  transform: rotate(8deg);
+}
+
+/* =========================
+   SUCCESS STORIES
+========================= */
+
+.success-section {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.success-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg,#ff4d94,#ff2d7a);
+  border-radius: 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  font-size: 28px;
+  box-shadow: 0 12px 30px rgba(255,45,122,.25);
+}
+
+.success-section h2 {
+  margin-top: 20px;
+  color: #071330;
+  font-size: 2.2rem;
+}
+
+.success-section > p {
+  color: #7c8499;
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+
+.success-card {
+  background: white;
+  border-radius: 30px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  box-shadow: 0 15px 40px rgba(0,0,0,.08);
+}
+
+.success-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.success-card div {
+  padding: 50px;
+  text-align: left;
+}
+
+.quote {
+  font-size: 4rem;
+  color: #ffb8d1;
+  line-height: 1;
+}
+
+.success-card p {
+  color: #5f6678;
+  line-height: 1.8;
+  margin: 20px 0;
+}
+
+.success-card h3 {
+  color: #ff2d7a;
+  margin-bottom: 10px;
+}
+
+.success-card small {
+  display: block;
+  color: #8b92a8;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 992px) {
+
+  .matches-hero h1 {
+    font-size: 2.3rem;
+  }
+
+  .success-card {
+    grid-template-columns: 1fr;
+  }
+
+  .success-card img {
+    height: 350px;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .matches-page {
+    padding: 25px 16px;
+  }
+
+  .matches-hero {
+    margin-bottom: 40px;
+  }
+
+  .matches-hero h1 {
+    font-size: 2rem;
+  }
+
+  .section-head {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .profiles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .match-img-box {
+    height: 320px;
+  }
+
+  .success-card div {
+    padding: 25px;
+  }
+
+  .success-section h2 {
+    font-size: 1.8rem;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .match-img-box {
+    height: 280px;
+  }
+
+  .match-info {
+    padding: 18px;
+  }
+
+  .connect-profile-btn {
+    height: 46px;
+    font-size: 14px;
+  }
+
+  .chat-profile-btn {
+    width: 46px;
+    height: 46px;
+  }
+
+  .success-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .success-section h2 {
+    font-size: 1.6rem;
+  }
+}

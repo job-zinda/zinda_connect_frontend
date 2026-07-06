@@ -1,0 +1,283 @@
+/* =========================
+   ADMIN PAYMENTS CSS
+========================= */
+
+.admin-manage-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 34px;
+  background:
+    radial-gradient(circle at top left, rgba(233, 22, 98, 0.08), transparent 30%),
+    linear-gradient(135deg, #fff7fb 0%, #f8fafc 48%, #ffffff 100%);
+  animation: paymentsFadeIn 0.45s ease;
+}
+
+.admin-manage-page .page-header {
+  margin-bottom: 24px;
+  padding: 24px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #edf0f5;
+  box-shadow: 0 22px 55px rgba(15, 23, 42, 0.08);
+  animation: paymentsCardUp 0.45s ease both;
+}
+
+.admin-manage-page .page-header h2 {
+  margin: 0;
+  color: #07122e;
+  font-size: clamp(28px, 3vw, 42px);
+  font-weight: 950;
+  letter-spacing: -0.8px;
+}
+
+.admin-manage-page .table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #edf0f5;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.09);
+  animation: paymentsCardUp 0.5s ease both;
+}
+
+.admin-manage-page table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+}
+
+.admin-manage-page thead {
+  background: linear-gradient(135deg, #fff1f6, #fff8fb);
+}
+
+.admin-manage-page th {
+  padding: 18px;
+  color: #07122e;
+  font-size: 13px;
+  font-weight: 950;
+  text-align: left;
+  border-bottom: 1px solid #edf0f5;
+  white-space: nowrap;
+}
+
+.admin-manage-page td {
+  padding: 16px 18px;
+  color: #475467;
+  font-size: 14px;
+  font-weight: 750;
+  border-bottom: 1px solid #f0f2f6;
+  vertical-align: middle;
+}
+
+.admin-manage-page tbody tr {
+  transition: 0.25s ease;
+}
+
+.admin-manage-page tbody tr:hover {
+  background: #fff8fb;
+  transform: scale(1.003);
+}
+
+.admin-manage-page .bold-text {
+  color: #07122e;
+  font-weight: 950;
+}
+
+.admin-manage-page code {
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #e91662;
+  font-size: 12px;
+  font-weight: 850;
+  border: 1px solid #edf0f5;
+}
+
+.status-badge {
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: capitalize;
+  display: inline-flex;
+  align-items: center;
+}
+
+.status-badge.success,
+.status-badge.completed,
+.status-badge.paid {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.status-badge.pending {
+  background: #fff7ed;
+  color: #f97316;
+}
+
+.status-badge.failed,
+.status-badge.cancelled {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.status-badge.refunded {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.admin-manage-page .table-container > p,
+.admin-manage-page .table-container > div {
+  padding: 44px 20px !important;
+  text-align: center !important;
+  color: #667085 !important;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .admin-manage-page {
+    padding: 92px 14px 28px !important;
+  }
+
+  .admin-manage-page .page-header {
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .admin-manage-page .page-header h2 {
+    font-size: 30px;
+  }
+
+  .admin-manage-page .table-container {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .admin-manage-page table,
+  .admin-manage-page thead,
+  .admin-manage-page tbody,
+  .admin-manage-page th,
+  .admin-manage-page td,
+  .admin-manage-page tr {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .admin-manage-page thead {
+    display: none;
+  }
+
+  .admin-manage-page tr {
+    margin-bottom: 16px;
+    padding: 16px;
+    border-radius: 22px;
+    background: #fff;
+    border: 1px solid #edf0f5;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+    animation: paymentsCardUp 0.35s ease both;
+  }
+
+  .admin-manage-page td {
+    padding: 11px 0;
+    border-bottom: 1px solid #f0f2f6;
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    text-align: right;
+  }
+
+  .admin-manage-page td:last-child {
+    border-bottom: none;
+  }
+
+  .admin-manage-page td:nth-child(1)::before {
+    content: "User";
+  }
+
+  .admin-manage-page td:nth-child(2)::before {
+    content: "Plan";
+  }
+
+  .admin-manage-page td:nth-child(3)::before {
+    content: "Amount";
+  }
+
+  .admin-manage-page td:nth-child(4)::before {
+    content: "Transaction ID";
+  }
+
+  .admin-manage-page td:nth-child(5)::before {
+    content: "Status";
+  }
+
+  .admin-manage-page td:nth-child(6)::before {
+    content: "Date";
+  }
+
+  .admin-manage-page td::before {
+    color: #07122e;
+    font-weight: 950;
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  .admin-manage-page code {
+    max-width: 170px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-manage-page {
+    padding: 86px 10px 24px !important;
+  }
+
+  .admin-manage-page .page-header h2 {
+    font-size: 26px;
+  }
+
+  .admin-manage-page tr {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .admin-manage-page td {
+    align-items: flex-start;
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .admin-manage-page code {
+    max-width: 100%;
+  }
+}
+
+/* ANIMATIONS */
+
+@keyframes paymentsFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes paymentsCardUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

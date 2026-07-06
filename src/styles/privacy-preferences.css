@@ -1,0 +1,96 @@
+.privacy-card,
+.preferences-card {
+  max-width: 950px;
+}
+
+.privacy-row,
+.preference-row {
+  min-height: 84px;
+  padding: 22px 0;
+  border-bottom: 1px solid #edf0f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 26px;
+}
+
+.privacy-row:last-child,
+.preference-row:last-child {
+  border-bottom: 0;
+}
+
+.privacy-row h4,
+.preference-link-row h4 {
+  margin: 0 0 5px;
+  color: #10182f;
+  font-size: 17px;
+  font-weight: 950;
+}
+
+.privacy-row p,
+.preference-link-row p {
+  margin: 0;
+  color: #7a8499;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.privacy-row select,
+.preference-field select {
+  min-width: 210px;
+  height: 52px;
+  border: 1.5px solid #dfe4ec;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-weight: 800;
+  outline: none;
+}
+
+.preference-field {
+  width: 100%;
+}
+
+.preference-field label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.preference-field select {
+  width: 100%;
+}
+
+.preference-link-row {
+  width: 100%;
+  min-height: 82px;
+  border: 0;
+  border-top: 1px solid #edf0f5;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  cursor: pointer;
+}
+
+.preference-link-row.danger h4 {
+  color: #dc2626;
+}
+
+.preference-link-row span {
+  font-size: 30px;
+  color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+  .privacy-row,
+  .preference-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .privacy-row select {
+    width: 100%;
+  }
+}

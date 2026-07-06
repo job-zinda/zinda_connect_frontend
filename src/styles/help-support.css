@@ -1,0 +1,136 @@
+.help-panel {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  animation: helpIn 0.35s ease;
+}
+
+.help-card {
+  width: 100%;
+  padding: 28px 34px;
+  border: 1px solid #edf0f5;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
+}
+
+.help-item {
+  width: 100%;
+  min-height: 96px;
+  padding: 20px 0;
+  border: none;
+  border-bottom: 1px solid #edf0f5;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.28s ease;
+}
+
+.help-item:last-child {
+  border-bottom: none;
+}
+
+.help-item:hover {
+  padding-left: 16px;
+  padding-right: 16px;
+  border-radius: 18px;
+  background: #fff1f6;
+}
+
+.help-left {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.help-item-icon {
+  width: 62px;
+  height: 62px;
+  border-radius: 18px;
+  background: #fff1f6;
+  color: #e91662;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+}
+
+.help-left h4 {
+  margin: 0 0 6px;
+  color: #07122e;
+  font-size: 22px;
+  font-weight: 950;
+}
+
+.help-left p {
+  margin: 0;
+  color: #7b8499;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.help-arrow {
+  color: #07122e;
+  font-size: 20px;
+}
+
+.help-item:hover .help-arrow {
+  color: #e91662;
+  transform: translateX(5px);
+}
+
+.help-back {
+  margin-bottom: 28px;
+  border: none;
+  background: transparent;
+  color: #07122e;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.help-back:hover {
+  color: #e91662;
+}
+
+@keyframes helpIn {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .help-card {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .help-item {
+    min-height: 82px;
+  }
+
+  .help-left {
+    gap: 14px;
+  }
+
+  .help-item-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+
+  .help-left h4 {
+    font-size: 17px;
+  }
+
+  .help-left p {
+    font-size: 13.5px;
+  }
+}

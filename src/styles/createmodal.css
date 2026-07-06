@@ -1,0 +1,304 @@
+/* ===== MODAL OVERLAY ===== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.45);
+  backdrop-filter: blur(6px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 999;
+  padding: 20px;
+
+  animation: fadeIn 0.3s ease;
+}
+
+/* ===== MODAL BOX ===== */
+
+.custom-modal.profile-modal {
+  width: min(380px, 95vw);
+
+  background: #ffffff;
+  border-radius: 28px;
+
+  padding: 24px 22px;
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.12),
+    0 6px 18px rgba(233, 22, 98, 0.12);
+
+  position: relative;
+  overflow: hidden;
+
+  animation: modalPop 0.4s ease;
+}
+
+/* ===== HEADER ===== */
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
+
+.modal-header h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #352b2f;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+/* ===== CLOSE BUTTON ===== */
+
+.profile-close-btn {
+  width: 38px;
+  height: 38px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #fff1f5;
+  color: #e91662;
+
+  font-size: 26px;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    0.3s ease;
+}
+
+.profile-close-btn:hover {
+  background: #ffe3ec;
+  transform: rotate(90deg) scale(1.05);
+}
+
+/* ===== PROFILE OPTION ===== */
+
+.profile-option {
+  position: relative;
+
+  width: 100%;
+  min-height: 82px;
+
+  padding: 16px 18px;
+  margin-bottom: 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  border-radius: 22px;
+  border: 1.5px solid rgba(233, 22, 98, 0.15);
+
+  background: linear-gradient(
+    135deg,
+    #ffffff,
+    #fff7fa
+  );
+
+  overflow: hidden;
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+/* Shine Effect */
+
+.profile-option::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: -120%;
+
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.65),
+    transparent
+  );
+
+  transition: 0.8s;
+}
+
+.profile-option:hover::before {
+  left: 120%;
+}
+
+/* Hover */
+
+.profile-option:hover {
+  transform: translateY(-5px);
+
+  border-color: rgba(233, 22, 98, 0.3);
+
+  box-shadow:
+    0 18px 35px rgba(233, 22, 98, 0.12),
+    0 5px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== ICON ===== */
+
+.profile-icon {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 18px;
+
+  background: linear-gradient(
+    135deg,
+    #ffc7da,
+    #ffe7ef
+  );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  box-shadow:
+    0 8px 18px rgba(233, 22, 98, 0.15);
+
+  transition: 0.3s ease;
+}
+
+.profile-option:hover .profile-icon {
+  transform: scale(1.08) rotate(-6deg);
+}
+
+.profile-icon img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+/* ===== CONTENT ===== */
+
+.profile-content {
+  flex: 1;
+}
+
+.profile-content h3 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  color: #3d3236;
+}
+
+.profile-content p {
+  margin-top: 5px;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #8d7d82;
+}
+
+/* ===== ARROW ===== */
+
+.profile-option span {
+  font-size: 30px;
+  font-weight: 400;
+
+  color: #e91662;
+
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
+}
+
+.profile-option:hover span {
+  transform: translateX(5px);
+  color: #ff2d7a;
+}
+
+/* ===== ERROR ===== */
+
+.error-message {
+  color: #e53935;
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+/* ===== LOADING STATE ===== */
+
+.profile-option.loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ===== ANIMATIONS ===== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.88) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ===== MOBILE ===== */
+
+@media (max-width: 480px) {
+  .custom-modal.profile-modal {
+    padding: 20px 16px;
+    border-radius: 24px;
+  }
+
+  .modal-header h2 {
+    font-size: 22px;
+  }
+
+  .profile-option {
+    min-height: 76px;
+    padding: 14px;
+  }
+
+  .profile-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .profile-content h3 {
+    font-size: 17px;
+  }
+
+  .profile-content p {
+    font-size: 12px;
+  }
+}

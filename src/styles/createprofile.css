@@ -1,0 +1,374 @@
+/* =========================================
+   MODAL OVERLAY
+========================================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px;
+
+  background: rgba(15, 15, 15, 0.5);
+  backdrop-filter: blur(7px);
+
+  animation: overlayFade 0.35s ease;
+}
+
+/* =========================================
+   CREATE MODAL
+========================================= */
+
+.custom-modal.create-modal {
+  width: min(330px, 90vw);
+
+  background: #ffffff;
+  border-radius: 30px;
+
+  padding: 18px 24px;
+
+  position: relative;
+  overflow: hidden;
+
+  box-shadow:
+    0 20px 55px rgba(0, 0, 0, 0.12),
+    0 8px 22px rgba(233, 22, 98, 0.12);
+
+  animation: modalPop 0.4s ease;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 26px;
+}
+
+.modal-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #352b2f;
+  margin: 0;
+
+  letter-spacing: -0.5px;
+}
+
+/* =========================================
+   CLOSE BUTTON
+========================================= */
+
+.modal-close-btn {
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #fff2f6;
+  color: #e91662;
+
+  font-size: 28px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+.modal-close-btn:hover {
+  background: #ffe2eb;
+  transform: rotate(90deg) scale(1.08);
+}
+
+/* =========================================
+   ERROR MESSAGE
+========================================= */
+
+.modal-error {
+  background: #fff1f1;
+  color: #e53935;
+
+  padding: 12px 14px;
+  border-radius: 14px;
+
+  font-size: 10px;
+  text-align: center;
+
+  margin-bottom: 16px;
+
+  border: 1px solid rgba(229, 57, 53, 0.15);
+}
+
+/* =========================================
+   FORM
+========================================= */
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* =========================================
+   INPUT FIELD
+========================================= */
+
+.modal-input {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  height: 42px;
+
+  border-radius: 18px;
+  border: 1.5px solid rgba(233, 22, 98, 0.12);
+
+  background: linear-gradient(
+    135deg,
+    #ffffff,
+    #fff8fb
+  );
+
+  padding: 0 16px;
+
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Focus Effect */
+
+.modal-input:focus-within {
+  border-color: rgba(233, 22, 98, 0.4);
+
+  box-shadow:
+    0 0 0 5px rgba(233, 22, 98, 0.08);
+
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   INPUT ICON
+========================================= */
+
+.modal-icon {
+  width: 32px;
+  height: 32px;
+
+  min-width: 42px;
+
+  border-radius: 20px;
+
+  background: linear-gradient(
+    135deg,
+    #ffd1e0,
+    #ffeaf1
+  );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-right: 12px;
+
+  transition: 0.3s ease;
+}
+
+.modal-input:focus-within .modal-icon {
+  transform: scale(1.05) rotate(-5deg);
+}
+
+.modal-icon img,
+.modal-input span img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* =========================================
+   INPUT
+========================================= */
+
+.modal-input input {
+  flex: 1;
+
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #3d3236;
+}
+
+.modal-input input::placeholder {
+  color: #a08e94;
+  font-weight: 400;
+}
+
+/* =========================================
+   EYE BUTTON
+========================================= */
+
+.modal-eye-btn {
+  width: 28px;
+  height: 28px;
+
+  border: none;
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  border-radius: 10px;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+.modal-eye-btn:hover {
+  background: #fff1f6;
+  transform: scale(1.08);
+}
+
+.modal-eye-btn img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* =========================================
+   PRIMARY BUTTON
+========================================= */
+
+.modal-primary-btn {
+  width: 100%;
+  height: 38px;
+
+  margin-top: 8px;
+
+  border: none;
+  border-radius: 18px;
+
+  background: linear-gradient(
+    135deg,
+    #e91662,
+    #ff4d8d
+  );
+
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* Hover */
+
+.modal-primary-btn:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 16px 28px rgba(233, 22, 98, 0.28);
+}
+
+/* Active */
+
+.modal-primary-btn:active {
+  transform: scale(0.98);
+}
+
+/* Disabled */
+
+.modal-primary-btn:disabled,
+.modal-close-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes overlayFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.88) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* =========================================
+   MOBILE RESPONSIVE
+========================================= */
+
+@media (max-width: 480px) {
+  .custom-modal.create-modal {
+    padding: 24px 18px;
+    border-radius: 24px;
+  }
+
+  .modal-header h2 {
+    font-size: 24px;
+  }
+
+  .modal-input {
+    height: 58px;
+    border-radius: 16px;
+  }
+
+  .modal-primary-btn {
+    height: 54px;
+    border-radius: 16px;
+  }
+
+  .modal-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .modal-input input {
+    font-size: 14px;
+  }
+}

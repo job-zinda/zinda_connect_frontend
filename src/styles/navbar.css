@@ -1,0 +1,357 @@
+
+.home-navbar {
+  width: 100%;
+  min-height: 82px;
+  padding: 0 56px;
+
+  background: linear-gradient(135deg, #ea1e63, #ff4b91);
+  box-shadow: 0 12px 35px rgba(234, 30, 99, 0.22);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: sticky;
+  top: 0;
+  z-index: 999;
+
+  animation: navSlideDown 0.5s ease;
+}
+
+.nav-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.home-logo {
+  width: 190px;
+  object-fit: contain;
+  animation: logoFloat 4s ease-in-out infinite;
+  cursor: pointer;
+}
+
+.menu-btn {
+  display: none;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* Desktop Right Side - Notification + Profile */
+.nav-right-desktop {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.desktop-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.desktop-user img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  transition: 0.3s ease;
+}
+
+.desktop-user img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.desktop-user span {
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.desktop-auth {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.desktop-auth a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 16px;
+  transition: 0.3s ease;
+}
+
+.desktop-auth a:hover {
+  opacity: 0.8;
+}
+
+.desktop-auth .signup-btn {
+  background: #fff;
+  color: #ea1e63 !important;
+  padding: 10px 22px;
+  border-radius: 28px;
+  font-weight: 800;
+  transition: 0.3s ease;
+}
+
+.desktop-auth .signup-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(255, 255, 255, 0.3);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+  position: relative;
+  transition: 0.3s ease;
+}
+
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -7px;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  border-radius: 20px;
+  transition: 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.mobile-auth,
+.mobile-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mobile-user img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+}
+
+.mobile-user span {
+  color: #fff;
+  font-weight: 700;
+}
+
+.mobile-user button,
+.signup-btn {
+  border: none;
+  background: #fff;
+  color: #ea1e63 !important;
+  padding: 10px 22px;
+  border-radius: 28px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.mobile-user button:hover,
+.signup-btn:hover {
+  transform: translateY(-3px);
+}
+
+/* Mobile Notification in Menu */
+.mobile-notification {
+  display: none;
+  width: 100%;
+  padding: 12px 0;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #ea1e63;
+  font-weight: 700;
+  font-size: 16px;
+  border-bottom: 1px solid rgba(234, 30, 99, 0.1);
+}
+
+@keyframes navSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes logoFloat {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .home-navbar {
+    display: block;
+    min-height: 72px;
+    padding: 0 16px;
+  }
+
+  .nav-top {
+    height: 72px;
+  }
+
+  .home-logo {
+    width: 145px;
+  }
+
+  /* Hide desktop right on mobile */
+  .nav-right-desktop {
+    display: none;
+  }
+
+  .menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 82px;
+    left: 16px;
+    right: 16px;
+
+    background: #fff;
+    border-radius: 22px;
+    padding: 22px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+
+    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.18);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-14px) scale(0.96);
+    transition: 0.28s ease;
+  }
+
+  .nav-links.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+
+  .nav-links a {
+    color: #ea1e63;
+    font-size: 16px;
+  }
+
+  .nav-links a::after {
+    background: #ea1e63;
+  }
+
+  /* Show mobile notification */
+  .mobile-notification {
+    display: flex;
+  }
+
+  .mobile-auth,
+  .mobile-user {
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mobile-user span {
+    color: #ea1e63;
+  }
+
+  .mobile-user img {
+    width: 34px;
+    height: 34px;
+    border-color: #ea1e63;
+  }
+
+  .mobile-user button,
+  .signup-btn {
+    width: 100%;
+    height: 46px;
+    background: #ea1e63;
+    color: #fff !important;
+  }
+}
+/* Notification Bell Styling in Navbar */
+.nav-right-desktop .notification-bell {
+  display: flex;
+  align-items: center;
+}
+
+.nav-right-desktop .notification-bell .bell-icon-wrapper {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.nav-right-desktop .notification-bell .bell-icon-wrapper:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.nav-right-desktop .notification-bell .bell-icon {
+  font-size: 20px;
+}
+
+/* Mobile notification styling */
+.mobile-notification .notification-bell {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-notification .bell-icon-wrapper {
+  background: transparent;
+  padding: 0;
+}
+
+.mobile-notification .bell-icon {
+  font-size: 20px;
+}
+.logout-btn {
+  background: white;
+  color: #e91662;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.logout-btn:hover {
+  background: #ffe0e9;
+}

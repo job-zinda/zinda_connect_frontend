@@ -1,0 +1,149 @@
+/* subscription.css */
+
+.subscription-container-page {
+  width: 100%;
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  padding: 34px !important;
+  animation: subFadeUp 0.45s ease;
+}
+
+.subscription-container-page .settings-header {
+  margin-bottom: 26px !important;
+}
+
+.subscription-container-page .settings-header h1 {
+  margin: 0;
+  color: #07122e;
+  font-size: clamp(34px, 4vw, 46px);
+  font-weight: 950;
+  letter-spacing: -1px;
+}
+
+.subscription-container-page .settings-header p {
+  margin-top: 8px !important;
+  color: #667085 !important;
+  font-size: 16px !important;
+  font-weight: 700;
+}
+
+.subscription-container-page .settings-card,
+.subscription-container-page > div:not(.settings-header) {
+  border-radius: 26px !important;
+  border: 1px solid #edf0f5;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 22px 55px rgba(15, 23, 42, 0.08) !important;
+  animation: subCardUp 0.5s ease both;
+}
+
+.subscription-container-page h3 {
+  color: #07122e;
+  font-weight: 950;
+}
+
+.subscription-container-page h4 {
+  color: #07122e !important;
+  font-weight: 950;
+}
+
+.subscription-container-page button {
+  transition: 0.28s ease !important;
+}
+
+.subscription-container-page button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(233, 22, 98, 0.22);
+}
+
+.subscription-container-page button:disabled {
+  opacity: 0.7;
+}
+
+.subscription-container-page > div:nth-of-type(2) > div {
+  animation: planPop 0.45s ease both;
+}
+
+.subscription-container-page > div:nth-of-type(2) > div > div {
+  border-radius: 24px !important;
+  background: linear-gradient(180deg, #ffffff, #fff8fb) !important;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+  transition: 0.3s ease;
+}
+
+.subscription-container-page > div:nth-of-type(2) > div > div:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 28px 65px rgba(233, 22, 98, 0.16);
+}
+
+.subscription-container-page svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .settings-content {
+    width: 100%;
+  }
+
+  .subscription-container-page {
+    padding: 92px 14px 28px !important;
+  }
+
+  .subscription-container-page .settings-card > div {
+    align-items: flex-start !important;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .subscription-container-page > div:last-child {
+    align-items: flex-start !important;
+    flex-direction: column;
+  }
+
+  .subscription-container-page > div:last-child button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .subscription-container-page {
+    padding: 86px 10px 24px !important;
+  }
+
+  .subscription-container-page .settings-header h1 {
+    font-size: 30px;
+  }
+}
+
+@keyframes subFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes subCardUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes planPop {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
