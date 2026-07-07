@@ -22,7 +22,6 @@ import Notifications from "./components/Notifications";
 import PasswordSecurity from "./components/PasswordSecurity";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import PrivacySettings from "./components/PrivacySettings";
-import ProfileInformation from "./components/ProfileInformation";
 import ReportProblem from "./components/ReportProblem";
 import SafetyTips from "./components/SafetyTips";
 import Subscription from "./components/Subscription";
