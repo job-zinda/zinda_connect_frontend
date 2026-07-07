@@ -164,3 +164,5 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 >>>>>>> 3fee2e2ea30dc8f182f5d45c6db461fd65779328
+
+.env.example

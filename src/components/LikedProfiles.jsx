@@ -58,6 +58,8 @@ export default function LikedProfiles() {
                     src={getImageUrl(profile.profile_picture)}
                     alt={profile.full_name}
                     onError={(e) => {
+                      if (e.target.src.endsWith("/default-avatar.png")) return;
+                      e.target.onerror = null;
                       e.target.src = "/default-avatar.png";
                     }}
                   />

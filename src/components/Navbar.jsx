@@ -117,7 +117,11 @@ export default function Navbar() {
               src={getProfileImage()}
               alt="Profile"
               style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }}
-              onError={(e) => { e.target.src = "/default-avatar.png"; }}
+              onError={(e) => {
+                if (e.target.src.endsWith("/default-avatar.png")) return;
+                e.target.onerror = null;
+                e.target.src = "/default-avatar.png";
+              }}
             />
             <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               {getUserName()}
