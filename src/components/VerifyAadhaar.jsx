@@ -551,7 +551,7 @@
 //   }
 // }
 import React, { useState, useEffect } from "react";
-import { getAadhaarVerificationAPI, submitAadhaarVerificationAPI, getSubscriptionAPI, getPublicPlansAPI } from "../apis/Api";
+import { getAadhaarVerificationAPI, submitAadhaarVerificationAPI, getSubscriptionAPI, getPublicPlansAPI, API_BASE_URL } from "../apis/Api";
 import { FaCrown, FaCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -683,7 +683,7 @@ export default function VerifyAadhaar() {
     try {
       const token = localStorage.getItem("access");
       const orderRes = await axios.post(
-        "http://127.0.0.1:8000/api/auth/payment/create-order/",
+        `${API_BASE_URL}/api/auth/payment/create-order/`,
         { plan_id: plan.id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -700,7 +700,7 @@ export default function VerifyAadhaar() {
         handler: async function (response) {
           try {
             await axios.post(
-              "http://127.0.0.1:8000/api/auth/payment/verify/",
+              `${API_BASE_URL}/api/auth/payment/verify/`,
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,

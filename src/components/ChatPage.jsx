@@ -14,8 +14,7 @@ import { FaArrowLeft, FaBan, FaCheck, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 import EmojiPicker from "emoji-picker-react";
 import "../styles/chat.css";
-
-const API_BASE_URL = "http://127.0.0.1:8000";
+import { API_BASE_URL } from "../apis/Api";
 
 export default function ChatPage() {
   const [searchParams] = useSearchParams();

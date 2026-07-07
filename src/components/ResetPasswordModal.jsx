@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styles/resetPassword.css";
+import { API_BASE_URL } from "../apis/Api";
 
 export default function ResetPasswordModal({ onClose, onBack, email }) { // ✅ email prop add ചെയ്തു
   const [newPassword, setNewPassword] = useState("");
@@ -31,7 +32,7 @@ export default function ResetPasswordModal({ onClose, onBack, email }) { // ✅ 
     try {
       // ✅ BACKEND API CALL
       const res = await axios.post(
-        "http://127.0.0.1:8000/api/auth/forgot-password/reset/",
+        `${API_BASE_URL}/api/auth/forgot-password/reset/`,
         {
           email: email.toLowerCase(), // ✅ email അയക്കണം
           new_password: newPassword,

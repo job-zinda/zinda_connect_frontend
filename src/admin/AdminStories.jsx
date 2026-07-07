@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAdminStoriesAPI, createAdminStoryAPI, deleteAdminStoryAPI, updateSuccessStoryAPI } from "../apis/Api";
+import { getAdminStoriesAPI, createAdminStoryAPI, deleteAdminStoryAPI, updateSuccessStoryAPI, API_BASE_URL } from "../apis/Api";
 import { toast } from "react-toastify";
 import { FaDownload, FaTimes } from "react-icons/fa";
 import "../styles/AdminStories.css";
@@ -79,8 +79,8 @@ export default function AdminStories() {
       image_one: null,
       image_two: null
     });
-    setPreviewOne(story.image_one? (story.image_one.startsWith('http')? story.image_one : `http://127.0.0.1:8000${story.image_one}`) : null);
-    setPreviewTwo(story.image_two? (story.image_two.startsWith('http')? story.image_two : `http://127.0.0.1:8000${story.image_two}`) : null);
+    setPreviewOne(story.image_one? (story.image_one.startsWith('http')? story.image_one : `${API_BASE_URL}${story.image_one}`) : null);
+    setPreviewTwo(story.image_two? (story.image_two.startsWith('http')? story.image_two : `${API_BASE_URL}${story.image_two}`) : null);
     setShowForm(true);
   };
 

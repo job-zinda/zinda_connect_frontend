@@ -5,10 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { MdVerified } from "react-icons/md"; // ✅ Add
 import logo from "../assets/image.png";
 import "../styles/navbar.css";
-import { getProfileAPI, getChatRoomsAPI, getAdminProfileAPI } from "../apis/Api";
+import { getProfileAPI, getChatRoomsAPI, getAdminProfileAPI, API_BASE_URL } from "../apis/Api";
 import NotificationBell from './NotificationBell';
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const BACKEND_URL = API_BASE_URL;
 
 export default function Navbar() {
   const navigate = useNavigate();

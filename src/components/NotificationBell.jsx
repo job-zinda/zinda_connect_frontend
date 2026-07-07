@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { getNotificationsAPI, markNotificationReadAPI } from "../apis/Api";
+import { getNotificationsAPI, markNotificationReadAPI, API_BASE_URL } from "../apis/Api";
 import "../styles/notificationBell.css";
-
-// നിങ്ങളുടെ Backend URL ഇവിടെ നൽകുക (ഇമേജ് പാത്ത് ശരിയാക്കാൻ വേണ്ടി)
-
-const API_BASE_URL = "http://127.0.0.1:8000";
 
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);

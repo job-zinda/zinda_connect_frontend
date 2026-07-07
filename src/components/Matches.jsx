@@ -12,9 +12,9 @@ import { toast } from "react-toastify";
 
 import Navbar from "./Navbar";
 import "../styles/matches.css";
-import { getMyMatchesAPI, createChatAPI, getAdminStatsAPI } from "../apis/Api";
+import { getMyMatchesAPI, createChatAPI, getAdminStatsAPI, API_BASE_URL } from "../apis/Api";
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const BACKEND_URL = API_BASE_URL;
 
 const ProfileCard = ({ profile }) => {
   const navigate = useNavigate();

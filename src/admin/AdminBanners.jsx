@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaTrash, FaEdit, FaEye, FaToggleOn, FaToggleOff } from "react-icons/fa";
-import { getAllAdsAPI, deleteAdAPI, updateAdAPI } from "../apis/Api";
+import { getAllAdsAPI, deleteAdAPI, updateAdAPI, API_BASE_URL } from "../apis/Api";
 import "../styles/adminBanners.css";
 
 export default function AdminBanners() {
@@ -49,7 +49,7 @@ export default function AdminBanners() {
         alert("പരസ്യം അപ്ഡേറ്റ് ചെയ്തു!");
       } else {
         const token = localStorage.getItem("access");
-        const response = await fetch(`http://127.0.0.1:8000/api/auth/admin/ads/`, {
+        const response = await fetch(`${API_BASE_URL}/api/auth/admin/ads/`, {
           method: "POST",
           headers: { "Authorization": `Bearer ${token}` },
           body: formData,
@@ -83,7 +83,7 @@ export default function AdminBanners() {
   const handleToggleActive = async (banner) => {
     try {
       const token = localStorage.getItem("access");
-      const response = await fetch(`http://127.0.0.1:8000/api/auth/admin/ads/${banner.id}/`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/admin/ads/${banner.id}/`, {
         method: "PATCH",
         headers: {
           "Authorization": `Bearer ${token}`,

@@ -5,16 +5,15 @@ import { MdVerified } from "react-icons/md";
 import {
   getProfileAPI,
   getPublicProfilesAPI,
-  getPreferencesAPI
+  getPreferencesAPI,
+  API_BASE_URL
 } from "../apis/Api";
 
 import Navbar from "./Navbar";
-import Footer from "./Footer"; 
+import Footer from "./Footer";
 import "../styles/home.css";
 import heartIcon from "../assets/image copy 3.png";
 import search from "../assets/image copy 8.png";
-
-const API_BASE_URL = "http://127.0.0.1:8000";
 
 const STATES_DISTRICTS = {
   "Kerala": ["Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad", "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"],

@@ -31,6 +31,7 @@ import {
 import {
   getAdminStatsAPI,
   getRecentRegistrationsAPI,
+  API_BASE_URL,
 } from "../apis/Api";
 import { color } from "chart.js/helpers";
 
@@ -350,7 +351,7 @@ export default function AdminDashboard() {
                               <div className="user-meta">
                                 {senderImg? (
                                   <img
-                                    src={senderImg.startsWith('http')? senderImg : `http://127.0.0.1:8000${senderImg}`}
+                                    src={senderImg.startsWith('http')? senderImg : `${API_BASE_URL}${senderImg}`}
                                     alt={senderName}
                                     className="avatar-placeholder"
                                     style={{ objectFit: 'cover', width: '40px', height: '40px', borderRadius: '50%' }}
@@ -396,10 +397,10 @@ export default function AdminDashboard() {
                           <div className="story-body">
                             <div className="story-images">
                               {displayStories[currentStoryIndex].image_one && (
-                                <img src={displayStories[currentStoryIndex].image_one.startsWith('http')? displayStories[currentStoryIndex].image_one : `http://127.0.0.1:8000${displayStories[currentStoryIndex].image_one}`} alt="Partner 1" className="story-image" />
+                                <img src={displayStories[currentStoryIndex].image_one.startsWith('http')? displayStories[currentStoryIndex].image_one : `${API_BASE_URL}${displayStories[currentStoryIndex].image_one}`} alt="Partner 1" className="story-image" />
                               )}
                               {displayStories[currentStoryIndex].image_two && (
-                                <img src={displayStories[currentStoryIndex].image_two.startsWith('http')? displayStories[currentStoryIndex].image_two : `http://127.0.0.1:8000${displayStories[currentStoryIndex].image_two}`} alt="Partner 2" className="story-image" />
+                                <img src={displayStories[currentStoryIndex].image_two.startsWith('http')? displayStories[currentStoryIndex].image_two : `${API_BASE_URL}${displayStories[currentStoryIndex].image_two}`} alt="Partner 2" className="story-image" />
                               )}
                             </div>
                             <p className="story-text">

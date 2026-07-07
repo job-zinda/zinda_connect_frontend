@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import axios from "axios";
 import "../styles/otpModal.css";
 import ResetPasswordModal from "./ResetPasswordModal";
+import { API_BASE_URL } from "../apis/Api";
 
 export default function EnterOtpModal({
   onClose,
@@ -53,7 +54,7 @@ export default function EnterOtpModal({
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/api/auth/forgot-password/verify-otp/",
+        `${API_BASE_URL}/api/auth/forgot-password/verify-otp/`,
         {
           email: email.toLowerCase(), 
           otp: otpCode,

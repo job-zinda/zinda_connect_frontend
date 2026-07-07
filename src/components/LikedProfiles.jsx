@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdVerified } from "react-icons/md"; 
-import { getMyLikesAPI } from "../apis/Api";
+import { getMyLikesAPI, API_BASE_URL } from "../apis/Api";
 import "../styles/profileLists.css";
 
 export default function LikedProfiles() {
@@ -12,7 +12,7 @@ export default function LikedProfiles() {
   const getImageUrl = (path) => {
     if (!path) return "/default-avatar.png";
     if (path.startsWith("http")) return path;
-    return `http://127.0.0.1:8000${path}`;
+    return `${API_BASE_URL}${path}`;
   };
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getSuccessStoriesAPI } from "../apis/Api";
+import { getSuccessStoriesAPI, API_BASE_URL } from "../apis/Api";
 
 export default function SuccessStories() {
   const [stories, setStories] = useState([]);
@@ -18,7 +18,7 @@ export default function SuccessStories() {
 
   const getImageUrl = (path) => {
     if (!path) return "https://via.placeholder.com/400x300";
-    return path.startsWith('http') ? path : `http://127.0.0.1:8000${path}`;
+    return path.startsWith('http') ? path : `${API_BASE_URL}${path}`;
   };
 
   if (error) {

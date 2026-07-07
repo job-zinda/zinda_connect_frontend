@@ -14,6 +14,7 @@ import eyeIconopen from "../assets/image copy 9.png";
 import CreateAccountModal from "./CreateAccountModal";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 import CreateProfileForModal from "./CreateProfileForModal";
+import { API_BASE_URL } from "../apis/Api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default function Login() {
     
     setLoading(true);
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/auth/login/", {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login/`, {
         email: loginInput.toLowerCase(),
         password: password,
       });

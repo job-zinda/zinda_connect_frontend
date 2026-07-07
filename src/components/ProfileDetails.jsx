@@ -9,6 +9,7 @@ import {
   removeFavouriteAPI,
   getMyLikesAPI,
   getMyFavouritesAPI,
+  API_BASE_URL,
 } from "../apis/Api";
 import "../styles/profileDetails.css";
 
@@ -24,7 +25,7 @@ export default function ProfileDetails() {
   const getFullImageUrl = (imagePath) => {
     if (!imagePath) return "https://via.placeholder.com/600x400";
     if (imagePath.startsWith("http")) return imagePath;
-    return `http://127.0.0.1:8000${imagePath}`;
+    return `${API_BASE_URL}${imagePath}`;
   };
 
   useEffect(() => {

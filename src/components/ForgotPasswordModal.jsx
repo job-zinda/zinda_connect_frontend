@@ -3,6 +3,7 @@ import axios from "axios";
 import "../styles/modal.css";
 import EnterOtpModal from "./EnterOtpModal";
 import emailIcon from "../assets/image copy 6.png";
+import { API_BASE_URL } from "../apis/Api";
 
 export default function ForgotPasswordModal({ onClose }) {
   const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ export default function ForgotPasswordModal({ onClose }) {
     try {
       // 2. API Call to Django Backend
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/auth/forgot-password/send-otp/",
+        `${API_BASE_URL}/api/auth/forgot-password/send-otp/`,
         { email: email }
       );
       
