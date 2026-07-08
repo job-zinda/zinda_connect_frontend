@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 
@@ -6,6 +5,7 @@ const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
 const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChange, handleNext, loading }) => {
   const [preview, setPreview] = useState(null);
+  const [error, setError] = useState("");
 
   const genderOptions = [
     { value: 'M', label: 'Male' },
@@ -29,7 +29,6 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
     { value: 'awaiting_divorce', label: 'Awaiting Divorce' }
   ];
 
-  //  Height Options - Feet & Inches + cm
   const heightOptions = [
     { value: '137', label: `4' 6" (137 cm)` },
     { value: '140', label: `4' 7" (140 cm)` },
@@ -61,7 +60,7 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
 
   const selectStyles = {
     control: (base, state) => ({
-    ...base,
+   ...base,
       minHeight: '42px',
       border: 'none',
       borderBottom: state.isFocused? '2px solid #e91662' : '2px solid #e0e0e0',
@@ -70,20 +69,9 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
       background: 'transparent',
       padding: '0'
     }),
-    valueContainer: (base) => ({
-    ...base,
-      padding: '0'
-    }),
-    singleValue: (base) => ({
-    ...base,
-      color: '#352b2f',
-      fontSize: '16px'
-    }),
-    placeholder: (base) => ({
-    ...base,
-      color: '#8d7d82',
-      fontSize: '16px'
-    }),
+    valueContainer: (base) => ({...base, padding: '0'}),
+    singleValue: (base) => ({...base, color: '#352b2f', fontSize: '16px'}),
+    placeholder: (base) => ({...base, color: '#8d7d82', fontSize: '16px'}),
     menuPortal: (base) => ({...base, zIndex: 9999 })
   };
 
@@ -103,14 +91,28 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
 
   const onFileSelect = (e) => {
     const file = e.target.files[0];
-    if (file) handleFileChange(file);
+    if (file) {
+      handleFileChange(file);
+      setError(""); 
+    }
+  };
+
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.profile_picture) {
+      setError("Profile photo നിർബന്ധമാണ്");
+      return;
+    }
+    setError("");
+    handleNext(e);
   };
 
   return (
     <div className="form-container">
       <h2>Basic Details ({profileType === 'parent'? 'Parent Mode' : 'Self Mode'})</h2>
 
-      <form onSubmit={handleNext}>
+      <form onSubmit={onSubmit}>
 
         {/* Profile Pic with Pencil Icon */}
         <div className="profile-pic-upload">
@@ -119,6 +121,7 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
               src={preview &&!preview.includes("via.placeholder.com")? preview : defaultAvatar}
               alt="Profile Preview"
               className="avatar-img"
+              style={{border: error? '2px solid red' : 'none'}} 
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = defaultAvatar;
@@ -126,7 +129,14 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
             />
             <label htmlFor="profile-file-input" className="avatar-edit-btn">✏️</label>
           </div>
-          <input type="file" accept="image/*" onChange={onFileSelect} id="profile-file-input" style={{ display: 'none' }} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={onFileSelect}
+            id="profile-file-input"
+            style={{ display: 'none' }}
+          />
+          {error && <p style={{color: 'red', fontSize: '13px', marginTop: '8px', textAlign: 'center'}}>{error}</p>}
         </div>
 
         {/* Parent Mode Fields */}
@@ -153,6 +163,7 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
                 placeholder="Select Relation"
                 styles={selectStyles}
                 menuPortalTarget={document.body}
+                isSearchable={false}
               />
             </div>
 
@@ -165,6 +176,7 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
                 placeholder="Select Option"
                 styles={selectStyles}
                 menuPortalTarget={document.body}
+                isSearchable={false}
               />
             </div>
 
@@ -207,6 +219,7 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
             placeholder="Select Gender"
             styles={selectStyles}
             menuPortalTarget={document.body}
+            isSearchable={false}
           />
         </div>
 
@@ -221,7 +234,6 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
           />
         </div>
 
-     
         <div className="form-group">
           <label>Height</label>
           <Select
@@ -231,6 +243,7 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
             placeholder="Select Height"
             styles={selectStyles}
             menuPortalTarget={document.body}
+            isSearchable={false}
           />
         </div>
 
@@ -243,6 +256,7 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
             placeholder="Select Marital Status"
             styles={selectStyles}
             menuPortalTarget={document.body}
+            isSearchable={false}
           />
         </div>
 
