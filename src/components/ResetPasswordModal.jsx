@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styles/resetPassword.css";
-import { API_BASE_URL } from "../apis/Api";
 
-export default function ResetPasswordModal({ onClose, onBack, email }) { // ✅ email prop add ചെയ്തു
+export default function ResetPasswordModal({ onClose, onBack, email }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ API CALL ADD ചെയ്തു
   const handleConfirm = async () => {
     setError("");
 
@@ -30,11 +28,11 @@ export default function ResetPasswordModal({ onClose, onBack, email }) { // ✅ 
 
     setLoading(true);
     try {
-      // ✅ BACKEND API CALL
+     
       const res = await axios.post(
-        `${API_BASE_URL}/api/auth/forgot-password/reset/`,
+        "http://127.0.0.1:8000/api/auth/forgot-password/reset/",
         {
-          email: email.toLowerCase(), // ✅ email അയക്കണം
+          email: email.toLowerCase(),
           new_password: newPassword,
           confirm_password: confirmPassword,
         }
@@ -42,12 +40,12 @@ export default function ResetPasswordModal({ onClose, onBack, email }) { // ✅ 
 
       if (res.status === 200) {
         alert("Password reset successful! Please login with new password.");
-        onClose(); // എല്ലാ modal ഉം close ചെയ്യും
+        onClose(); 
       }
     } catch (err) {
       console.log("RESET ERROR:", err.response?.data);
       if (err.response?.data?.error) {
-        setError(err.response.data.error); // "OTP not verified" പോലെ
+        setError(err.response.data.error);
       } else if (err.response?.data?.password) {
         setError(err.response.data.password[0]);
       } else {

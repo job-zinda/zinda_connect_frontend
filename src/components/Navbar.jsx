@@ -1,14 +1,12 @@
-
-
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MdVerified } from "react-icons/md"; // ✅ Add
+import { MdVerified } from "react-icons/md"; 
 import logo from "../assets/image.png";
 import "../styles/navbar.css";
-import { getProfileAPI, getChatRoomsAPI, getAdminProfileAPI, API_BASE_URL } from "../apis/Api";
+import { getProfileAPI, getChatRoomsAPI, getAdminProfileAPI } from "../apis/Api";
 import NotificationBell from './NotificationBell';
 
-const BACKEND_URL = API_BASE_URL;
+const BACKEND_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -42,12 +40,10 @@ export default function Navbar() {
       if (role === "admin" || profileType === "admin") {
         setIsAdmin(true);
         const res = await getAdminProfileAPI();
-        console.log("ADMIN PROFILE:", res.data);
         setCurrentUser(res.data);
       } else {
         setIsAdmin(false);
         const res = await getProfileAPI();
-        console.log("USER PROFILE:", res.data); // ✅ Check is_verified, is_premium
         setCurrentUser(res.data.profile || res.data);
       }
     } catch (err) {
@@ -94,6 +90,22 @@ export default function Navbar() {
       <nav className={menuOpen ? "nav-links active" : "nav-links"}>
         <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
         <Link to="/matches" onClick={() => setMenuOpen(false)}>Matches</Link>
+
+        {/* ✅ ICONS KALANJU - TEXT MATHRAM */}
+        {!isAdmin && (
+          <>
+            <Link to="/settings/get-verified" onClick={() => setMenuOpen(false)}>
+              Get Verified
+            </Link>
+            <Link to="/settings/favourites" onClick={() => setMenuOpen(false)}>
+              My Favourites
+            </Link>
+            <Link to="/settings/likes" onClick={() => setMenuOpen(false)}>
+              My Likes
+            </Link>
+          </>
+        )}
+
         <Link to="/chat" onClick={() => setMenuOpen(false)} style={{ position: "relative" }}>
           Chats
           {unreadChats > 0 && (
@@ -117,19 +129,13 @@ export default function Navbar() {
               src={getProfileImage()}
               alt="Profile"
               style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }}
-              onError={(e) => {
-                if (e.target.src.endsWith("/default-avatar.png")) return;
-                e.target.onerror = null;
-                e.target.src = "/default-avatar.png";
-              }}
+              onError={(e) => { e.target.src = "/default-avatar.png"; }}
             />
             <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               {getUserName()}
-              {/* ✅ Instagram style verified badge */}
               {currentUser.is_verified && (
                 <MdVerified style={{ color: '#1d9bf0', fontSize: '16px' }} title="Verified" />
               )}
-              {/* ✅ Premium Badge */}
               {currentUser.is_premium && (
                 <span style={{ background: '#FFD700', color: '#000', padding: '2px 6px', borderRadius: '8px', fontSize: '9px', fontWeight: 'bold' }}>
                   PRO

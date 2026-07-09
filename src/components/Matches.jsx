@@ -7,20 +7,20 @@ import {
   FaGraduationCap,
   FaMapMarkerAlt,
 } from "react-icons/fa";
-import { MdVerified } from "react-icons/md"; 
+import { MdVerified } from "react-icons/md"; // ✅ Add
 import { toast } from "react-toastify";
 
 import Navbar from "./Navbar";
 import "../styles/matches.css";
-import { getMyMatchesAPI, createChatAPI, getAdminStatsAPI, API_BASE_URL } from "../apis/Api";
+import { getMyMatchesAPI, createChatAPI, getAdminStatsAPI } from "../apis/Api";
 
-const BACKEND_URL = API_BASE_URL;
+const BACKEND_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 const ProfileCard = ({ profile }) => {
   const navigate = useNavigate();
   const [chatLoading, setChatLoading] = useState(false);
 
-  console.log("Profile Data:", profile); // ✅ ഇത് add ചെയ്യുക
+  console.log("Profile Data:", profile);
   console.log("is_verified:", profile.is_verified, "is_premium:", profile.is_premium);
 
   const imageSrc = profile.profile_picture
@@ -69,7 +69,7 @@ const ProfileCard = ({ profile }) => {
       <div className="match-info">
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
           {profile.full_name}, {profile.age || "N/A"}
-          {/* ✅ Instagram Badge */}
+         
           {profile.is_verified && (
             <MdVerified 
               style={{ color: '#1d9bf0', fontSize: '18px' }}
@@ -78,7 +78,7 @@ const ProfileCard = ({ profile }) => {
           )}
         </h3>
 
-        {/* ✅ Premium Badge */}
+        
         {profile.is_premium && (
           <span style={{
             background: '#FFD700',
@@ -124,7 +124,7 @@ const ProfileCard = ({ profile }) => {
 };
 
 
-// ✅ Admin Recent Match Card - Chat button ഒഴിവാക്കി
+
 const AdminMatchCard = ({ match }) => {
   const navigate = useNavigate();
 

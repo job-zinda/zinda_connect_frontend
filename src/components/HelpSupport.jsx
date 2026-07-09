@@ -26,7 +26,7 @@ const HelpSupport = () => {
     { id: "faq", icon: <FaQuestion />, title: "FAQs", description: "Find answers to common questions" },
     { id: "contact", icon: <FaRegCommentDots />, title: "Contact Support", description: "Chat or email us for assistance" },
     { id: "report", icon: <FaExclamationTriangle />, title: "Report a Problem", description: "Report bugs or technical issues" },
-    // { id: "safety", icon: <FaShieldAlt />, title: "Safety Tips", description: "Tips for a safe and secure experience" },
+ 
     { id: "terms", icon: <FaFileAlt />, title: "Terms & Conditions", description: "Read our terms and conditions" },
     { id: "privacy", icon: <FaUserShield />, title: "Privacy Policy", description: "Read our privacy policy" },
   ];

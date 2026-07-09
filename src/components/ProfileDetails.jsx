@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { MdVerified } from "react-icons/md"; // ✅ Instagram blue tick
+import { MdVerified } from "react-icons/md"; 
 import {
   getProfileDetailsAPI,
   likeProfileAPI,
@@ -9,7 +9,6 @@ import {
   removeFavouriteAPI,
   getMyLikesAPI,
   getMyFavouritesAPI,
-  API_BASE_URL,
 } from "../apis/Api";
 import "../styles/profileDetails.css";
 
@@ -25,7 +24,7 @@ export default function ProfileDetails() {
   const getFullImageUrl = (imagePath) => {
     if (!imagePath) return "https://via.placeholder.com/600x400";
     if (imagePath.startsWith("http")) return imagePath;
-    return `${API_BASE_URL}${imagePath}`;
+    return `http://127.0.0.1:8000${imagePath}`;
   };
 
   useEffect(() => {
@@ -126,7 +125,7 @@ export default function ProfileDetails() {
           <div className="detail-overlay">
             <h1 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               {profile.full_name}, {profile.age || "N/A"}
-              {/* ✅ Instagram Blue Tick Badge */}
+              
               {profile.is_verified && (
                 <MdVerified
                   style={{ 
@@ -138,8 +137,7 @@ export default function ProfileDetails() {
                 />
               )}
             </h1>
-            
-            {/* ✅ Premium Badge - Image പോലെ */}
+          
             {profile.is_premium && (
               <div style={{
                 background: '#FFD700',

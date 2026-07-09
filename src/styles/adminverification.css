@@ -5,25 +5,22 @@
 /* verification table layout */
 .profiles-table-wrapper {
   width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
+  overflow: hidden;
 }
 
 .profiles-table-card {
   width: 100%;
-  min-width: 0;
   border-radius: 24px;
   background: #fff;
   border: 1px solid #edf0f5;
   box-shadow: 0 16px 42px rgba(15, 23, 42, 0.06);
-  overflow-x: auto;
+  overflow: hidden;
 }
 
 .profiles-table-card table {
   width: 100%;
-  min-width: 920px;
   border-collapse: collapse;
-  table-layout: auto;
+  table-layout: fixed;
 }
 
 .profiles-table-card th,
@@ -56,15 +53,6 @@
 
 .profiles-table-card tbody tr:last-child td {
   border-bottom: none;
-}
-
-.admin-users-content {
-  width: 100%;
-  max-width: 100%;
-  min-height: 100vh;
-  padding: 34px;
-  margin: 0;
-  overflow-x: hidden;
 }
 
 .profile-user-cell {

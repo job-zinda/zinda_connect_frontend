@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaArrowLeft, FaSearch, FaChevronDown } from "react-icons/fa";
-// import "../styles/helpSupport.css";
+
 import '../styles/faq-page.css'
 
 const FAQPage = ({ onBack, onNavigate }) => {

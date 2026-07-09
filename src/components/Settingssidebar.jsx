@@ -1,11 +1,7 @@
-
-
 import React from "react";
 import { Link } from "react-router-dom";
-
 import {
   FaUser,
-  FaCheckCircle,
   FaLock,
   FaBell,
   FaShieldAlt,
@@ -13,11 +9,10 @@ import {
   FaBan,
   FaCreditCard,
   FaQuestionCircle,
-  FaHeart,
-  FaThumbsUp,
   FaSignOutAlt,
 } from "react-icons/fa";
 import '../styles/settings-sidebar.css'
+
 const SettingsSidebar = ({ activeTab, setActiveTab }) => {
   const menuItems = [
     {
@@ -26,12 +21,7 @@ const SettingsSidebar = ({ activeTab, setActiveTab }) => {
       label: "Profile Information",
       path: "/settings/profile-information",
     },
-    {
-      id: "get-verified",
-      icon: <FaCheckCircle />,
-      label: "Get Verified",
-      path: "/settings/get-verified",
-    },
+    // ❌ Get Verified kalanju
     {
       id: "password",
       icon: <FaLock />,
@@ -68,30 +58,14 @@ const SettingsSidebar = ({ activeTab, setActiveTab }) => {
       label: "Subscription",
       path: "/settings/subscription",
     },
-    // {
-    //   id: "support",
-    //   icon: <FaQuestionCircle />,
-    //   label: "Help & Support",
-    //   path: "/support/help",
-    // }
-   {
-  id: "support",
-  icon: <FaQuestionCircle />,
-  label: "Help & Support",
-  path: "/settings/help-support", // ✅ fixed
-},
     {
-      id: "favourites",
-      icon: <FaHeart />,
-      label: "My Favourites",
-      path: "/settings/favourites",
+      id: "support",
+      icon: <FaQuestionCircle />,
+      label: "Help & Support",
+      path: "/settings/help-support",
     },
-    {
-      id: "likes",
-      icon: <FaThumbsUp />,
-      label: "My Likes",
-      path: "/settings/likes",
-    },
+    // ❌ My Favourites kalanju
+    // ❌ My Likes kalanju
   ];
 
   const handleLogout = () => {
@@ -107,10 +81,7 @@ const SettingsSidebar = ({ activeTab, setActiveTab }) => {
 
       <ul>
         {menuItems.map((item) => (
-          <li
-            key={item.id}
-            className={activeTab === item.id ? "active" : ""}
-          >
+          <li key={item.id} className={activeTab === item.id ? "active" : ""}>
             <Link
               to={item.path}
               className="sidebar-link"

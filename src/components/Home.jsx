@@ -5,15 +5,16 @@ import { MdVerified } from "react-icons/md";
 import {
   getProfileAPI,
   getPublicProfilesAPI,
-  getPreferencesAPI,
-  API_BASE_URL
+  getPreferencesAPI
 } from "../apis/Api";
 
 import Navbar from "./Navbar";
-import Footer from "./Footer";
+import Footer from "./Footer"; 
 import "../styles/home.css";
 import heartIcon from "../assets/image copy 3.png";
 import search from "../assets/image copy 8.png";
+
+const API_BASE_URL = "http://127.0.0.1:8000";
 
 const STATES_DISTRICTS = {
   "Kerala": ["Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad", "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"],
@@ -78,31 +79,36 @@ export default function Home() {
       const token = localStorage.getItem("access");
 
       try {
-        if (token) {
-          const prefRes = await getPreferencesAPI();
-          setUserPreferences(prefRes.data);
-          
-          setSearchFilters(prev => ({
-            ...prev,
-            lookingFor: prefRes.data.show_me === 'Men' ? 'Groom' : 
-                       prefRes.data.show_me === 'Women' ? 'Bride' : 'Select',
-            ageRange: prefRes.data.age_preference || 'Select Age'
-          }));
-        }
-
-        const res = await getPublicProfilesAPI();
+        const res = await getPublicProfilesAPI(); // profiles first
         const profiles = res.data || [];
-        console.log("PROFILES DATA:", profiles);
         setAllProfilesList(profiles);
         splitBridesAndGrooms(profiles);
 
         if (token) {
-          const userResponse = await getProfileAPI();
-          setCurrentUser(userResponse.data.profile);
+          try {
+            const prefRes = await getPreferencesAPI();
+            setUserPreferences(prefRes.data);
+            setSearchFilters(prev => ({
+              ...prev, // ✅ prev copy cheyyanam
+              lookingFor: prefRes.data.show_me === 'Men' ? 'Groom' : 
+                        prefRes.data.show_me === 'Women' ? 'Bride' : 'Select',
+              ageRange: prefRes.data.age_preference || 'Select Age'
+            }));
+          } catch (prefErr) {
+            console.error("Preferences load failed", prefErr);
+            // error set cheyyaruth, athu important alla
+          }
+
+          try {
+            const userResponse = await getProfileAPI();
+            setCurrentUser(userResponse.data.profile);
+          } catch (userErr) {
+            console.error("User profile load failed", userErr);
+          }
         }
       } catch (err) {
         console.error(err);
-        setError("Profiles load ചെയ്യാൻ സാധിച്ചില്ല.");
+        setError("Profiles load ചെയ്യാൻ സാധിച്ചില്ല."); // profiles matthe fail aanel matram
       } finally {
         setLoading(false);
       }
@@ -299,7 +305,7 @@ export default function Home() {
         )}
       </main>
 
-      <Footer /> {/* ✅ Footer add ചെയ്തു */}
+      <Footer />
     </div>
   );
 }
@@ -365,14 +371,14 @@ function ProfileCard({ profile, navigate }) {
       <div className="match-card-body">
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', margin: 0 }}>
           {profile.full_name || "Name N/A"}
-          {/* ✅ Instagram Blue Tick */}
+         
           {profile.is_verified && (
             <MdVerified 
               style={{ color: '#1d9bf0', fontSize: '18px' }}
               title="Verified Profile"
             />
           )}
-          {/* ✅ Premium Badge */}
+    
           {profile.is_premium && (
             <span style={{ 
               background: 'linear-gradient(135deg, #FFD700, #FFA500)', 

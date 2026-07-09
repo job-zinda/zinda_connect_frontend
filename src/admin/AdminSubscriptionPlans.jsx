@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import API, { getAdminPlansAPI, createAdminPlanAPI } from "../apis/Api";
@@ -15,7 +14,7 @@ export default function AdminSubscriptionPlans() {
     name: "",
     price: "",
     duration_months: "1",
-    features: "", // Comma separated
+    features: "", 
     badge_color: "#6c757d",
     is_free: false,
   });
@@ -67,7 +66,7 @@ export default function AdminSubscriptionPlans() {
       return;
     }
 
-    // ✅ Features array ആക്കി
+ 
     const featuresList = formData.features
      .split(',')
      .map(f => f.trim())
@@ -77,7 +76,7 @@ export default function AdminSubscriptionPlans() {
       name: name,
       price: Number(finalPrice), 
       duration_months: Number(finalDuration),
-      features: featuresList, // ✅ Array
+      features: featuresList, 
       badge_color: formData.badge_color,
       is_free: formData.is_free,
     };

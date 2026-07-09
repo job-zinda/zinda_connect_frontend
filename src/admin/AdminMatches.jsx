@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch, FaFilter, FaEye, FaRegCommentDots } from "react-icons/fa";
-import { getAllProfilesAPI, createChatAPI, API_BASE_URL } from "../apis/Api";
+import { getAllProfilesAPI, createChatAPI } from "../apis/Api";
 import "../styles/adminMatches.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -15,7 +15,7 @@ export default function AdminMatches() {
 
   const tabs = ["All Matches", "New Matches", "Accepted", "Pending", "Rejected"];
 
-  const backendBaseURL = API_BASE_URL;
+  const backendBaseURL = "http://127.0.0.1:8000";
 
   useEffect(() => {
     fetchProfiles();

@@ -2,16 +2,16 @@
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   color: #ffffff;
   padding: 50px 20px 30px;
-  margin-top: 60px;
   width: 100%;
   box-sizing: border-box;
+  margin-top: auto;
 }
 
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr repeat(3, 1fr);
   gap: 40px;
   margin-bottom: 30px;
 }
@@ -31,6 +31,7 @@
   color: #ffffff;
   position: relative;
   padding-bottom: 10px;
+  display: inline-block;
 }
 
 .footer-section h4::after {
@@ -51,6 +52,7 @@
   margin: 8px 0;
   cursor: pointer;
   transition: all 0.3s ease;
+  word-break: break-word; /* ✅ email/phone cut aavathirikkam */
 }
 
 .footer-section p:hover {
@@ -72,18 +74,60 @@
   margin: 0;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* TABLET: 2 x 2 Grid */
+@media (max-width: 992px) {
   .footer-content {
-    grid-template-columns: 1fr;
-    gap: 30px;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
   }
-  
+}
+
+/* MOBILE: 2 x 2 Grid - 4th column cut aavathirikkam */
+@media (max-width: 768px) {
   .footer {
-    padding: 40px 20px 20px;
+    padding: 35px 16px 20px;
   }
   
+  .footer-content {
+    grid-template-columns: 1fr 1fr; /* ✅ 1fr alla, 2 column aakki */
+    gap: 25px 20px;
+    text-align: left; /* Mobile il left aanu nallathu */
+  }
+
   .footer-section h3 {
     font-size: 20px;
+  }
+
+  .footer-section h4 {
+    font-size: 15px;
+  }
+
+  .footer-section h4::after {
+    left: 0;
+    transform: none;
+    width: 30px;
+  }
+  
+  .footer-section p {
+    font-size: 14px;
+    margin: 6px 0;
+  }
+
+  .footer-section p:hover {
+    padding-left: 0;
+  }
+}
+
+/* SMALL MOBILE: 1 Column */
+@media (max-width: 480px) {
+  .footer-content {
+    grid-template-columns: 1fr; 
+    gap: 25px;
+    text-align: center;
+  }
+  
+  .footer-section h4::after {
+    left: 50%;
+    transform: translateX(-50%);
   }
 }

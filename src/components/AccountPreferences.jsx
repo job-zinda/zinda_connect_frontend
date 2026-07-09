@@ -1,13 +1,12 @@
-
 import React, { useState, useEffect } from "react";
 import { getPreferencesAPI, updatePreferencesAPI } from "../apis/Api";
 
 const AccountPreferences = () => {
   const [preferences, setPreferences] = useState({
     language: "English",
-    distance: "Anywhere", // ✅ Default Anywhere
-    age_preference: "All Ages", // ✅ Default All Ages
-    show_me: "Everyone", // ✅ Default Everyone
+    distance: "Anywhere", 
+    age_preference: "All Ages", 
+    show_me: "Everyone", 
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

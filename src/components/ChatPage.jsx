@@ -14,7 +14,8 @@ import { FaArrowLeft, FaBan, FaCheck, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 import EmojiPicker from "emoji-picker-react";
 import "../styles/chat.css";
-import { API_BASE_URL } from "../apis/Api";
+
+const API_BASE_URL = "http://127.0.0.1:8000";
 
 export default function ChatPage() {
   const [searchParams] = useSearchParams();
@@ -211,7 +212,7 @@ export default function ChatPage() {
     setSelectedRoom(room);
     lastAppliedRoomIdRef.current = room.id;
     setAutoScroll(true);
-    // FIX: replace:true use cheyth history push cheyyathaakki
+  
     navigate(`/chat?room_id=${room.id}`, { replace: true });
   };
 

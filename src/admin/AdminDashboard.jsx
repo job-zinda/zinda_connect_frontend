@@ -31,7 +31,6 @@ import {
 import {
   getAdminStatsAPI,
   getRecentRegistrationsAPI,
-  API_BASE_URL,
 } from "../apis/Api";
 import { color } from "chart.js/helpers";
 
@@ -112,7 +111,6 @@ export default function AdminDashboard() {
     return { senderName, senderImg, messageText, timestamp, roomId };
   };
 
-  // ✅ Chart Config - Real Data from Backend
   const chartData = {
     labels: stats.user_growth_labels || [],
     datasets: [{
@@ -191,36 +189,36 @@ export default function AdminDashboard() {
               <p style={{ textAlign: 'center', padding: '40px', color: '#868e96' }}>Loading Dashboard Data...</p>
             ) : (
               <>
-                {/* 1. Top Overview Statistics Grid */}
+                
                 <div className="stats-grid">
-  <StatCard
-    title="Total Users"
-    value={stats.total_users ?? 0}
-    percentage="+18.6%"
-    icon={<FaUsers />}
-  />
+                  <StatCard
+                    title="Total Users"
+                    value={stats.total_users ?? 0}
+                    percentage="+18.6%"
+                    icon={<FaUsers />}
+                  />
 
-  <StatCard
-    title="Active Matches"
-    value={stats.active_matches ?? stats.total_matches ?? 0}
-    percentage="+12.4%"
-    icon={<FaHeart />}
-  />
+                  <StatCard
+                    title="Active Matches"
+                    value={stats.active_matches ?? stats.total_matches ?? 0}
+                    percentage="+12.4%"
+                    icon={<FaHeart />}
+                  />
 
-  <StatCard
-    title="Messages"
-    value={stats.messages_sent ?? stats.total_messages ?? 0}
-    percentage="+22.1%"
-    icon={<FaComments />}
-  />
+                  <StatCard
+                    title="Messages"
+                    value={stats.messages_sent ?? stats.total_messages ?? 0}
+                    percentage="+22.1%"
+                    icon={<FaComments />}
+                  />
 
-  <StatCard
-    title="Revenue"
-    value={`₹${stats.revenue ?? stats.total_revenue ?? 0}`}
-    percentage="+20.8%"
-    icon={<FaIndianRupeeSign />}
-  />
-</div>
+                  <StatCard
+                    title="Revenue"
+                    value={`₹${stats.revenue ?? stats.total_revenue ?? 0}`}
+                    percentage="+20.8%"
+                    icon={<FaIndianRupeeSign />}
+                  />
+                </div>
 
                 <div className="dashboard-row">
                   <div className="panel-card">
@@ -230,7 +228,7 @@ export default function AdminDashboard() {
                         <option>Last 30 Days</option>
                       </select>
                     </div>
-                    {/* ✅ Real Chart with Dates & Count */}
+                  
                     <div style={{ height: '180px', padding: '10px 0' }}>
                       {stats.user_growth_data?.length > 0? (
                         <Line data={chartData} options={chartOptions} />
@@ -351,7 +349,7 @@ export default function AdminDashboard() {
                               <div className="user-meta">
                                 {senderImg? (
                                   <img
-                                    src={senderImg.startsWith('http')? senderImg : `${API_BASE_URL}${senderImg}`}
+                                    src={senderImg.startsWith('http')? senderImg : `http://127.0.0.1:8000${senderImg}`}
                                     alt={senderName}
                                     className="avatar-placeholder"
                                     style={{ objectFit: 'cover', width: '40px', height: '40px', borderRadius: '50%' }}
@@ -397,10 +395,10 @@ export default function AdminDashboard() {
                           <div className="story-body">
                             <div className="story-images">
                               {displayStories[currentStoryIndex].image_one && (
-                                <img src={displayStories[currentStoryIndex].image_one.startsWith('http')? displayStories[currentStoryIndex].image_one : `${API_BASE_URL}${displayStories[currentStoryIndex].image_one}`} alt="Partner 1" className="story-image" />
+                                <img src={displayStories[currentStoryIndex].image_one.startsWith('http')? displayStories[currentStoryIndex].image_one : `http://127.0.0.1:8000${displayStories[currentStoryIndex].image_one}`} alt="Partner 1" className="story-image" />
                               )}
                               {displayStories[currentStoryIndex].image_two && (
-                                <img src={displayStories[currentStoryIndex].image_two.startsWith('http')? displayStories[currentStoryIndex].image_two : `${API_BASE_URL}${displayStories[currentStoryIndex].image_two}`} alt="Partner 2" className="story-image" />
+                                <img src={displayStories[currentStoryIndex].image_two.startsWith('http')? displayStories[currentStoryIndex].image_two : `http://127.0.0.1:8000${displayStories[currentStoryIndex].image_two}`} alt="Partner 2" className="story-image" />
                               )}
                             </div>
                             <p className="story-text">

@@ -22,7 +22,7 @@ export default function AdminSettings() {
     phone: "",
     role: "Admin",
     date_of_birth: "",
-    gender: "", // ✅ default empty, user select ചെയ്യണം
+    gender: "",
     location: "",
     language: "English",
     bio: "",
@@ -57,7 +57,6 @@ export default function AdminSettings() {
 
       const profileData = res.data.profile || res.data.profiles || res.data;
 
-      // Backend il ninn Male/Female വരും, അത് small ആക്കി select il കാണിക്കുന്നു
       const fetchedGender = profileData.gender? profileData.gender.toLowerCase() : "";
 
       setAdmin({
@@ -94,7 +93,7 @@ export default function AdminSettings() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    const maxSize = 2 * 1024 * 1024; 
     if (file.size > maxSize) {
       toast.error("File size is too big. Max allowed is 2MB");
       return;

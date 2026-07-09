@@ -22,6 +22,7 @@ import Notifications from "./components/Notifications";
 import PasswordSecurity from "./components/PasswordSecurity";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import PrivacySettings from "./components/PrivacySettings";
+import ProfileInformation from "./components/ProfileInformation";
 import ReportProblem from "./components/ReportProblem";
 import SafetyTips from "./components/SafetyTips";
 import Subscription from "./components/Subscription";
@@ -118,99 +119,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-// import Home from "./components/Home";
-// import Login from "./components/Login";
-// import ProfileDetails from "./components/ProfileDetails";
-// import ProfileCreationController from "./components/ProfileCreationController";
-
-// import AdminDashboard from "./admin/AdminDashboard";
-// import Navbar from "./components/Navbar";
-// import Settings from "./components/Settings";
-
-// function App() {
-
-//   return (
-
-//     <BrowserRouter>
-
-//       <Routes>
-
-//         {/* Landing Page */}
-//         <Route path="/" element={<Home />} />
-//         <Route path="/navbar"  element={<Navbar />} />
-
-//         {/* Login Page */}
-//         <Route path="/login" element={<Login />} />
-
-//           <Route
-//           path="/create-profile/:type"
-//           element={<ProfileCreationController />}
-//         />
-
-//         {/* User Home/Profile */}
-//         <Route path="/profile" element={<ProfileDetails />} />
-        
-
-//         {/* Admin Dashboard */}
-//         <Route path="/admin" element={<AdminDashboard />} />
-//         <Route path="/settings" element={<Settings />} />
-
-//       </Routes>
-
-//     </BrowserRouter>
-//   );
-// }
-
-// export default App;
-
-
-
-
-
-
-
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import Login from "./components/Login";
-// import Home from "./components/Home";
-// import ProfileDetails from "./components/ProfileDetails";
-
-// function App() {
-//   return (
-//     <BrowserRouter>
-//       <Routes>
-//         <Route path="/" element={<Home />} />
-//         <Route path="/login" element={<Login />} />
-//         <Route path="/profile" element={<ProfileDetails />} />
-//       </Routes>
-//     </BrowserRouter>
-//   );
-// }
-
-// export default App;
-
-// export default App;
-// import React, { useState } from "react";
-// import Login from "./components/Login";
-// import Home from "./components/Home";
-
-// function App() {
-//   const [page, setPage] = useState("login");
-
-//   return (
-//     <>
-//       {page === "login" && <Login goToHome={() => setPage("home")} />}
-//       {page === "home" && <Home goToLogin={() => setPage("login")} />}
-//     </>
-//   );
-// }
-

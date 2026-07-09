@@ -14,7 +14,6 @@ import eyeIconopen from "../assets/image copy 9.png";
 import CreateAccountModal from "./CreateAccountModal";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 import CreateProfileForModal from "./CreateProfileForModal";
-import { API_BASE_URL } from "../apis/Api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -36,7 +35,7 @@ export default function Login() {
     
     setLoading(true);
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/login/`, {
+      const res = await axios.post("http://127.0.0.1:8000/api/auth/login/", {
         email: loginInput.toLowerCase(),
         password: password,
       });
@@ -70,14 +69,14 @@ export default function Login() {
 
   return (
     <main className="login-page">
-     
+      {/* ✅ LEFT PANEL - className മാറ്റി */}
       <section className="login-left">
         <div className="login-logo">
           <img src={logo} alt="Zinda Connect" />
         </div>
       </section>
 
-     
+      {/* ✅ RIGHT PANEL - className മാറ്റി */}
       <section className="login-right">
         <div className="login-box">
           <div className="login-heart-circle">
@@ -89,7 +88,7 @@ export default function Login() {
           {error && <div className="login-error">{error}</div>}
 
           <form className="login-form" onSubmit={handleLogin} autoComplete="off">
-            
+            {/* ✅ EMAIL - className മാറ്റി */}
             <div className="login-input">
               <img src={personIcon} alt="person" className="input-icon" />
               <input
@@ -102,7 +101,7 @@ export default function Login() {
               />
             </div>
 
-            
+            {/* ✅ PASSWORD - className മാറ്റി */}
             <div className="login-input">
               <img src={lockIcon} alt="lock" className="input-icon" />
               <input
@@ -123,7 +122,7 @@ export default function Login() {
             </div>
             
 
-           
+            {/* ✅ FORGOT - className മാറ്റി */}
             <button
               type="button"
               className="forgot-link"

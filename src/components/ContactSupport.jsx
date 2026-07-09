@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { FaArrowLeft, FaEnvelope, FaWhatsapp, FaPhoneAlt, FaPaperPlane, FaImage, FaTimes } from "react-icons/fa";
 import { sendSupportMessageAPI } from "../apis/Api";
@@ -42,7 +41,7 @@ const ContactSupport = ({ onBack }) => {
   };
 
   const handleSubmit = async () => {
-    if (!message) return alert("ദയവായി സന്ദേശം ടൈപ്പ് ചെയ്യുക!");
+    if (!message) return alert("ദയവായി സന്ദേശം ടൈപ്പ് ചെയ്യുക!   Please type your message here!");
 
     setLoading(true);
     const formData = new FormData();
@@ -52,13 +51,13 @@ const ContactSupport = ({ onBack }) => {
 
     try {
       await sendSupportMessageAPI(formData);
-      alert("സന്ദേശം വിജയകരമായി അഡ്മിന്റെ ചാറ്റിലേക്ക് അയച്ചിട്ടുണ്ട്. അഡ്മിൻ ഉടൻ മറുപടി നൽകുന്നതാണ്!");
+      alert("Message send to the admin successfully....! സന്ദേശം വിജയകരമായി അഡ്മിന്റെ ചാറ്റിലേക്ക് അയച്ചിട്ടുണ്ട്. അഡ്മിൻ ഉടൻ മറുപടി നൽകുന്നതാണ്!");
       setMessage("");
       setFile(null);
       setFilePreview(null);
     } catch (err) {
       console.error(err);
-      alert("അയക്കാൻ സാധിച്ചില്ല, വീണ്ടും ശ്രമിക്കുക.");
+      alert("Can't send the message try again..!  അയക്കാൻ സാധിച്ചില്ല, വീണ്ടും ശ്രമിക്കുക.");
     } finally {
       setLoading(false);
     }
@@ -68,7 +67,7 @@ const ContactSupport = ({ onBack }) => {
     <div className="help-sub-page">
       <button className="help-back" onClick={onBack}><FaArrowLeft /> Help & Support</button>
       <h1>Contact Support</h1>
-      <p>സപ്പോർട്ട് ടീമുമായി നേരിട്ട് ബന്ധപ്പെടുക.</p>
+      <p>Contact support team directly   /  സപ്പോർട്ട് ടീമുമായി നേരിട്ട് ബന്ധപ്പെടുക.</p>
 
       <div className="support-tabs">
         <button className={activeTab === "message"? "active" : ""} onClick={() => setActiveTab("message")}>Send Chat Message</button>
@@ -97,7 +96,7 @@ const ContactSupport = ({ onBack }) => {
             <div className="form-group">
               <label>Attachments <span>(Optional)</span></label>
 
-              {/* ✅ Hidden file input */}
+              {/* Hidden file input */}
               <input
                 type="file"
                 ref={fileInputRef}
@@ -106,7 +105,7 @@ const ContactSupport = ({ onBack }) => {
                 className="file-input-hidden"
               />
 
-              {/* ✅ Custom upload button */}
+              {/* Custom upload button */}
               {!file? (
                 <button
                   type="button"

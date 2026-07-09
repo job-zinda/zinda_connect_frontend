@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { getNotificationsAPI, markNotificationReadAPI, API_BASE_URL } from "../apis/Api";
+import { getNotificationsAPI, markNotificationReadAPI } from "../apis/Api";
 import "../styles/notificationBell.css";
+
+const API_BASE_URL = "http://127.0.0.1:8000";
 
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);
@@ -44,7 +46,6 @@ const NotificationBell = () => {
         fetchNotifications();
       }
 
-      // തരം തിരിച്ച് പ്രൊഫൈലിലേക്ക് നാവിഗേറ്റ് ചെയ്യുന്നു
       if (notification.notification_type === 'like' && notification.sender_profile_id) {
         navigate(`/profile-details/${notification.sender_profile_id}`);
       } else if (notification.notification_type === 'favourite' && notification.sender_profile_id) {
@@ -61,23 +62,19 @@ const NotificationBell = () => {
     }
   };
 
-  // യൂസർക്ക് ഇമേജ് ഇല്ലെങ്കിൽ പേരിന്റെ ആദ്യ അക്ഷരം വെച്ച് അവതാർ ഉണ്ടാക്കുന്നു
   const getAvatarUrl = (name) => {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'User')}&background=ea1e63&color=fff&bold=true`;
   };
 
-  // പ്രൊഫൈൽ ഇമേജ് പാത്ത് കൃത്യമായി എടുക്കാൻ
   const getProfileImage = (notification) => {
     const imgPath = notification.sender_image || notification.sender_profile_image || notification.sender_image_path;
     
     if (!imgPath) return getAvatarUrl(notification.sender_name);
-    
-    // ഇമേജ് ലിങ്ക് പൂർണ്ണമായ URL ആണോ അതോ വെറും പാത്ത് ആണോ എന്ന് നോക്കുന്നു
+   
     if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
       return imgPath;
     }
     
-    // വെറും പാത്ത് ആണെങ്കിൽ Backend URL ചേർക്കുന്നു
     return `${API_BASE_URL}${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
   };
 

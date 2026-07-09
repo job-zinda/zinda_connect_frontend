@@ -5,7 +5,7 @@ const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
 const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChange, handleNext, loading }) => {
   const [preview, setPreview] = useState(null);
-  const [error, setError] = useState("");
+  const [imageError, setImageError] = useState(""); // ✅ NEW: error state
 
   const genderOptions = [
     { value: 'M', label: 'Male' },
@@ -69,9 +69,9 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
       background: 'transparent',
       padding: '0'
     }),
-    valueContainer: (base) => ({...base, padding: '0'}),
-    singleValue: (base) => ({...base, color: '#352b2f', fontSize: '16px'}),
-    placeholder: (base) => ({...base, color: '#8d7d82', fontSize: '16px'}),
+    valueContainer: (base) => ({...base, padding: '0' }),
+    singleValue: (base) => ({...base, color: '#352b2f', fontSize: '16px' }),
+    placeholder: (base) => ({...base, color: '#8d7d82', fontSize: '16px' }),
     menuPortal: (base) => ({...base, zIndex: 9999 })
   };
 
@@ -80,48 +80,46 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
       if (formData.profile_picture instanceof File) {
         const objectUrl = URL.createObjectURL(formData.profile_picture);
         setPreview(objectUrl);
+        setImageError(""); // ✅ image add cheyyumbo error pokum
         return () => URL.revokeObjectURL(objectUrl);
       } else {
         setPreview(formData.profile_picture);
+        setImageError("");
       }
     } else {
       setPreview(null);
     }
   }, [formData.profile_picture]);
 
-  const onFileSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      handleFileChange(file);
-      setError(""); 
-    }
-  };
-
-
+  // ✅ NEW: Form submit check
   const onSubmit = (e) => {
     e.preventDefault();
     if (!formData.profile_picture) {
-      setError("Profile photo നിർബന്ധമാണ്");
-      return;
+      setImageError("Profile picture നിർബന്ധമാണ് *");
+      return; // stop here
     }
-    setError("");
-    handleNext(e);
+    setImageError("");
+    handleNext(e); // all ok, next page
+  };
+
+  const onFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) handleFileChange(file);
   };
 
   return (
     <div className="form-container">
       <h2>Basic Details ({profileType === 'parent'? 'Parent Mode' : 'Self Mode'})</h2>
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit}> {/* ✅ onSubmit maatti */}
 
         {/* Profile Pic with Pencil Icon */}
         <div className="profile-pic-upload">
-          <div className="avatar-wrapper">
+          <div className="avatar-wrapper" style={{border: imageError? "2px solid red" : "none", borderRadius: "50%"}}>
             <img
               src={preview &&!preview.includes("via.placeholder.com")? preview : defaultAvatar}
               alt="Profile Preview"
               className="avatar-img"
-              style={{border: error? '2px solid red' : 'none'}} 
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = defaultAvatar;
@@ -129,14 +127,11 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
             />
             <label htmlFor="profile-file-input" className="avatar-edit-btn">✏️</label>
           </div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={onFileSelect}
-            id="profile-file-input"
-            style={{ display: 'none' }}
-          />
-          {error && <p style={{color: 'red', fontSize: '13px', marginTop: '8px', textAlign: 'center'}}>{error}</p>}
+          <input type="file" accept="image/*" onChange={onFileSelect} id="profile-file-input" style={{ display: 'none' }} />
+
+          {/* ✅ Error Message */}
+          {imageError && <p style={{color: "red", fontSize: "13px", marginTop: "8px", textAlign: "center"}}>{imageError}</p>}
+          {!formData.profile_picture && <p style={{fontSize: "12px", color: "#e91662", textAlign: "center"}}>* Profile Picture Required</p>}
         </div>
 
         {/* Parent Mode Fields */}
@@ -163,7 +158,6 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
                 placeholder="Select Relation"
                 styles={selectStyles}
                 menuPortalTarget={document.body}
-                isSearchable={false}
               />
             </div>
 
@@ -176,7 +170,6 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
                 placeholder="Select Option"
                 styles={selectStyles}
                 menuPortalTarget={document.body}
-                isSearchable={false}
               />
             </div>
 
@@ -219,7 +212,6 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
             placeholder="Select Gender"
             styles={selectStyles}
             menuPortalTarget={document.body}
-            isSearchable={false}
           />
         </div>
 
@@ -243,7 +235,6 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
             placeholder="Select Height"
             styles={selectStyles}
             menuPortalTarget={document.body}
-            isSearchable={false}
           />
         </div>
 
@@ -256,7 +247,6 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
             placeholder="Select Marital Status"
             styles={selectStyles}
             menuPortalTarget={document.body}
-            isSearchable={false}
           />
         </div>
 

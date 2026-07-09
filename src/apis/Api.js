@@ -1,12 +1,11 @@
 import axios from "axios";
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const API_BASE_URL = "http://127.0.0.1:8000";
 
 const API = axios.create({
   baseURL: `${API_BASE_URL}/api/auth/`
 });
 
-// ✅ Public API instance - auth ഇല്ലാത്ത endpoints ന്
 const PublicAPI = axios.create({
   baseURL: `${API_BASE_URL}/api/`
 });
@@ -218,8 +217,6 @@ export const getAdminPaymentsAPI = () => API.get("admin/payments/");
 
 // ===== PUBLIC APIs =====
 export const getPublicPlansAPI = () => PublicAPI.get("plans/");
-
-// ✅ FIXED: Public Success Stories API - auth ഇല്ലാതെ call ചെയ്യാം
 export const getSuccessStoriesAPI = () => PublicAPI.get("success-stories/");
 
 export default API;

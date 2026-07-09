@@ -1,277 +1,7 @@
-// import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom"; 
-// import { 
-//   FaCrown, FaCheck, FaHeadset, FaExternalLinkAlt, 
-//   FaCreditCard, FaMobileAlt, FaUniversity, FaQrcode, FaTimes 
-// } from "react-icons/fa";
-// import { getSubscriptionAPI, cancelSubscriptionAPI, getPublicPlansAPI } from "../apis/Api";
-// import { toast } from "react-toastify";
-// import axios from "axios"; 
-
-// // Razorpay script load cheyyu
-// const loadRazorpayScript = () => {
-//   return new Promise((resolve) => {
-//     const script = document.createElement("script");
-//     script.src = "https://checkout.razorpay.com/v1/checkout.js";
-//     script.onload = () => resolve(true);
-//     script.onerror = () => resolve(false);
-//     document.body.appendChild(script);
-//   });
-// };
-
-// export default function Subscription() {
-//   const navigate = useNavigate();
-//   const [subData, setSubData] = useState(null);
-//   const [availablePlans, setAvailablePlans] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-
-//   useEffect(() => {
-//     fetchSubscriptionAndPlans();
-//   }, []);
-
-//   const fetchSubscriptionAndPlans = async () => {
-//     try {
-//       setLoading(true);
-//       const subRes = await getSubscriptionAPI();
-//       setSubData(subRes.data);
-
-//       const plansRes = await getPublicPlansAPI();
-//       setAvailablePlans(plansRes.data || []);
-//     } catch (error) {
-//       console.error("Subscription or plans fetch failed:", error);
-//       toast.error("Failed to load plans");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleCancelSubscription = async () => {
-//     if (!window.confirm("Are you sure you want to cancel your active subscription?")) return;
-//     try {
-//       await cancelSubscriptionAPI();
-//       toast.success("Subscription cancelled successfully.");
-//       fetchSubscriptionAndPlans();
-//     } catch (error) {
-//       toast.error("Failed to cancel subscription.");
-//     }
-//   };
-
-//   // ✅ REAL PAYMENT - Razorpay Checkout
-//   const handlePayment = async (plan) => {
-//     setIsProcessingPayment(true);
-    
-//     const res = await loadRazorpayScript();
-//     if (!res) {
-//       toast.error("Razorpay SDK failed to load. Check your connection.");
-//       setIsProcessingPayment(false);
-//       return;
-//     }
-
-//     try {
-//       const token = localStorage.getItem("access");
-      
-//       // 1. Create order from backend
-//       const orderRes = await axios.post(
-//         "http://127.0.0.1:8000/api/auth/payment/create-order/",
-//         { plan_id: plan.id },
-//         { headers: { Authorization: `Bearer ${token}` } }
-//       );
-
-//       const { order_id, amount, currency, key, plan_name } = orderRes.data;
-
-//       // 2. Razorpay options
-//       const options = {
-//         key: key,
-//         amount: amount,
-//         currency: currency,
-//         name: "Zinda Connect",
-//         description: `${plan_name} Subscription`,
-//         order_id: order_id,
-//         handler: async function (response) {
-//           // 3. Verify payment
-//           try {
-//             const verifyRes = await axios.post(
-//               "http://127.0.0.1:8000/api/auth/payment/verify/",
-//               {
-//                 razorpay_order_id: response.razorpay_order_id,
-//                 razorpay_payment_id: response.razorpay_payment_id,
-//                 razorpay_signature: response.razorpay_signature,
-//                 plan_id: plan.id
-//               },
-//               { headers: { Authorization: `Bearer ${token}` } }
-//             );
-            
-//             toast.success("Payment successful! Plan activated.");
-//             fetchSubscriptionAndPlans();
-//           } catch (err) {
-//             toast.error("Payment verification failed");
-//           }
-//         },
-//         prefill: {
-//           name: subData?.user_name || "",
-//           email: subData?.email || "",
-//           contact: subData?.phone || ""
-//         },
-//         theme: {
-//           color: "#E91E63"
-//         },
-//         modal: {
-//           ondismiss: function() {
-//             setIsProcessingPayment(false);
-//           }
-//         }
-//       };
-
-//       const rzp = new window.Razorpay(options);
-//       rzp.open();
-      
-//     } catch (err) {
-//       console.error("Payment error:", err);
-//       toast.error("Failed to initiate payment");
-//     } finally {
-//       setIsProcessingPayment(false);
-//     }
-//   };
-
-//   const handleHelpCenter = () => {
-//     navigate('/help-support');
-//   };
-
-//   if (loading) {
-//     return (
-//       <div style={{ padding: "40px", textAlign: "center", color: "#6c757d" }}>
-//         <p>Loading subscription tiers & gateways...</p>
-//       </div>
-//     );
-//   }
-
-//   // ✅ Fix: Check if user already has THIS specific plan
-//   const isCurrentPlan = (planId) => {
-//     return subData?.is_active && subData?.plan?.id === planId;
-//   };
-
-//   return (
-//         <div className="settings-content" style={{ flex: 1 }}>
-
-//     <div className="subscription-container-page" style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
-//       <div className="settings-header" style={{ marginBottom: "25px" }}>
-//         <h1>Subscription Plans</h1>
-//         <p style={{ color: "#6c757d" }}>Upgrade your account to unlock premium communication features and verified matching options.</p>
-//       </div>
-
-//       <div className="settings-card" style={{ marginBottom: "30px", background: "#fff", padding: "25px", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-//         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #eee", paddingBottom: "15px" }}>
-//           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-//             <div style={{ color: "#ffc107", fontSize: "28px", display: "flex" }}><FaCrown /></div>
-//             <div>
-//               <h3 style={{ margin: 0, fontSize: "20px" }}>{subData?.is_active? subData.plan_name : "Free Tier Member"}</h3>
-//               <p style={{ margin: "4px 0 0 0", color: "#6c757d", fontSize: "14px" }}>
-//                 {subData?.is_active? `Expires on: ${subData.expires_at}` : "Limited features enabled"}
-//               </p>
-//             </div>
-//           </div>
-//           <span style={{ background: subData?.is_active? "#2b8a3e" : "#6c757d", color: "#fff", padding: "6px 14px", borderRadius: "20px", fontSize: "14px", fontWeight: "bold" }}>
-//             {subData?.is_active? "Active Premium" : "Free Plan"}
-//           </span>
-//         </div>
-
-//         {subData?.is_active && (
-//           <button onClick={handleCancelSubscription} style={{ marginTop: "20px", background: "#dc3545", color: "#fff", border: "none", padding: "8px 16px", borderRadius: "4px", cursor: "pointer", fontWeight: "500" }}>
-//             Cancel Subscription
-//           </button>
-//         )}
-//       </div>
-
-//       <div style={{ background: "#fff", padding: "25px", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-//         <h3 style={{ marginBottom: "5px" }}>Available Premium Upgrades</h3>
-//         <p style={{ color: "#6c757d", marginBottom: "25px" }}>Choose a plan and pay securely via UPI/Cards/Netbanking.</p>
-        
-//         {availablePlans.length === 0? (
-//           <p style={{ color: "#868e96", textAlign: "center", padding: "20px" }}>No premium plans configured by the administrator at this moment.</p>
-//         ) : (
-//           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "25px" }}>
-//             {availablePlans.map((plan) => (
-//               <div key={plan.id} style={{ 
-//                 border: `2px solid ${plan.badge_color || '#e0e0e0'}`, 
-//                 padding: "25px", 
-//                 borderRadius: "10px", 
-//                 textAlign: "center", 
-//                 position: "relative", 
-//                 background: "#f8f9fa",
-//                 display: "flex",
-//                 flexDirection: "column"
-//               }}>
-//                 <h4 style={{ fontSize: "20px", margin: "0 0 10px 0", color: "#212529" }}>{plan.name}</h4>
-//                 <p style={{ fontSize: "32px", fontWeight: "bold", margin: "15px 0", color: "#e91e63" }}>₹{plan.price}</p>
-                
-//                 <div style={{ background: "#fff", padding: "10px", borderRadius: "6px", margin: "15px 0", fontSize: "14px", border: "1px solid #eee" }}>
-//                   <strong>Validity:</strong> {plan.duration_months} Months
-//                 </div>
-
-//                 <div style={{ minHeight: "100px", textAlign: "left", margin: "15px 0", flex: 1 }}>
-//                   {Array.isArray(plan.features) && plan.features.length > 0? (
-//                     plan.features.map((feature, idx) => (
-//                       <div key={idx} style={{ display: "flex", alignItems: "flex-start", gap: "8px", margin: "8px 0", fontSize: "14px", color: "#495057" }}>
-//                         <FaCheck color="#2b8a3e" size={14} style={{ marginTop: "2px", flexShrink: 0 }} />
-//                         <span>{feature}</span>
-//                       </div>
-//                     ))
-//                   ) : (
-//                     <p style={{ color: "#868e96", fontSize: "14px", textAlign: "center" }}>No features listed</p>
-//                   )}
-//                 </div>
-                
-//                 <button 
-//                   onClick={() => handlePayment(plan)} 
-//                   disabled={isCurrentPlan(plan.id) || isProcessingPayment}
-//                   style={{ 
-//                     background: isCurrentPlan(plan.id)? "#6c757d" : "#e91e63", 
-//                     color: "#fff", 
-//                     border: "none", 
-//                     padding: "12px 20px", 
-//                     borderRadius: "6px", 
-//                     width: "100%", 
-//                     cursor: (isCurrentPlan(plan.id) || isProcessingPayment)? "not-allowed" : "pointer", 
-//                     fontWeight: "bold", 
-//                     marginTop: "auto",
-//                     fontSize: "15px", 
-//                     transition: "0.2s" 
-//                   }}
-//                 >
-//                   {isCurrentPlan(plan.id)? "Current Plan" : isProcessingPayment? "Processing..." : "Pay Now"}
-//                 </button>
-//               </div>
-//             ))}
-//           </div>
-//         )}
-//       </div>
-
-//       <div style={{ marginTop: "30px", background: "#fff", padding: "20px", borderRadius: "10px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "15px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-//         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-//           <div style={{ fontSize: "26px", color: "#e91e63", display: "flex" }}><FaHeadset /></div>
-//           <div>
-//             <h3 style={{ margin: 0, fontSize: "16px" }}>Need Help Regarding Billing?</h3>
-//             <p style={{ margin: "4px 0 0 0", color: "#6c757d", fontSize: "14px" }}>Contact our priority payment support line.</p>
-//           </div>
-//         </div>
-        
-//         <button 
-//           onClick={handleHelpCenter}
-//           style={{ padding: "10px 18px", borderRadius: "6px", border: "1px solid #dee2e6", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", fontWeight: "500" }}
-//         >
-//           Help Center <FaExternalLinkAlt size={12} />
-//         </button>
-//       </div>
-//     </div>
-//     </div>
-
-//   );
-// }
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCrown, FaHeadset, FaExternalLinkAlt, FaCheck, FaTimes } from "react-icons/fa";
-import { getSubscriptionAPI, cancelSubscriptionAPI, getPublicPlansAPI, API_BASE_URL } from "../apis/Api";
+import { getSubscriptionAPI, cancelSubscriptionAPI, getPublicPlansAPI } from "../apis/Api";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -343,7 +73,7 @@ export default function Subscription() {
       const token = localStorage.getItem("access");
 
       const orderRes = await axios.post(
-        `${API_BASE_URL}/api/auth/payment/create-order/`,
+        "http://127.0.0.1:8000/api/auth/payment/create-order/",
         { plan_id: plan.id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -360,7 +90,7 @@ export default function Subscription() {
         handler: async function (response) {
           try {
             await axios.post(
-              `${API_BASE_URL}/api/auth/payment/verify/`,
+              "http://127.0.0.1:8000/api/auth/payment/verify/",
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
@@ -401,9 +131,9 @@ export default function Subscription() {
     }
   };
 
-  // ✅ FIX 2: Help Center route
+  
   const handleHelpCenter = () => {
-    navigate('/help-support'); // App.js ൽ ഈ route ഉണ്ടെന്ന് ഉറപ്പാക്കുക
+    navigate('/help-support');
   };
 
   if (loading) {
@@ -414,10 +144,8 @@ export default function Subscription() {
     );
   }
 
-  // ✅ FIX 1: Current plan check - plan_id use ചെയ്യുക
   const isCurrentPlan = (planId) => {
     if (!subData?.is_active) return false;
-    // Backend ൽ നിന്ന് plan_id അല്ലെങ്കിൽ plan.id വരാം
     return subData?.plan_id === planId || subData?.plan?.id === planId;
   };
 
