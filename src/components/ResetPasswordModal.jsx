@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { resetPasswordAPI } from "../apis/Api"; // ✅ Api.js ninnu
+import { resetPasswordAPI } from "../apis/Api"; 
 import "../styles/resetPassword.css";
 
 export default function ResetPasswordModal({ onClose, onBack, email }) {

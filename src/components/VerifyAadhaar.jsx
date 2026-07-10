@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAadhaarVerificationAPI, submitAadhaarVerificationAPI, getSubscriptionAPI, getPublicPlansAPI, createPaymentOrderAPI, verifyPaymentAPI } from "../apis/Api"; // ✅
+import { getAadhaarVerificationAPI, submitAadhaarVerificationAPI, getSubscriptionAPI, getPublicPlansAPI, createPaymentOrderAPI, verifyPaymentAPI } from "../apis/Api";
 import { FaCrown, FaCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -115,7 +115,7 @@ export default function VerifyAadhaar() {
       return;
     }
     try {
-      const orderRes = await createPaymentOrderAPI({ plan_id: plan.id }); // ✅ localhost maatti
+      const orderRes = await createPaymentOrderAPI({ plan_id: plan.id });
       const { order_id, amount, currency, key, plan_name } = orderRes.data;
       const options = {
         key: key,
@@ -126,7 +126,7 @@ export default function VerifyAadhaar() {
         order_id: order_id,
         handler: async function (response) {
           try {
-            await verifyPaymentAPI({ // ✅ localhost maatti
+            await verifyPaymentAPI({
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
@@ -141,7 +141,7 @@ export default function VerifyAadhaar() {
         },
         prefill: { name: subscription?.user_name || "", email: subscription?.email || "" },
         theme: { color: "#E91E63" },
-        modal: { ondismiss: function () { setIsProcessingPayment(false); } }
+        modal: { ondismiss: function () { setIsProcessingPayment(false); } } // ✅ FIXED HERE
       };
       const rzp = new window.Razorpay(options);
       rzp.open();
@@ -156,6 +156,83 @@ export default function VerifyAadhaar() {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
+
+  const renderForm = () => {
+    return (
+      <form className="profile-card" onSubmit={handleSubmit}>
+        <div className="profile-right" style={{ width: "100%" }}>
+          <h3>{isEditing? "Update Aadhaar Details" : "Aadhaar Details"}</h3>
+
+          <div className="form-group">
+            <label>Aadhaar Number *</label>
+            <input
+              type="text"
+              value={aadhaarNumber}
+              onChange={(e) => setAadhaarNumber(e.target.value.replace(/\D/g, '').slice(0, 12))}
+              placeholder="12 digit Aadhaar number"
+              maxLength="12"
+              required
+              disabled={!subscription?.is_active}
+            />
+            <span style={{ fontSize: "12px", color: "#667085" }}>
+              Enter 12 digit number without spaces
+            </span>
+          </div>
+
+          <div className="form-group">
+            <label>Aadhaar Card Image *</label>
+            <div className="profile-image-box" style={{ width: "300px", height: "200px", borderRadius: "8px", marginBottom: "10px", border: "2px dashed #e2e8f0" }}>
+              {previewUrl? (
+                <img src={previewUrl} alt="Aadhaar Preview" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+              ) : verification?.aadhaar_image? (
+                <img src={verification.aadhaar_image} alt="Current Aadhaar" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+              ) : (
+                <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#f8fafc", color: "#999", flexDirection: "column", gap: "10px" }}>
+                  <span style={{ fontSize: "40px" }}>📄</span>
+                  <span>No image selected</span>
+                </div>
+              )}
+              <label htmlFor="aadhaar-file" className="upload-icon" style={{ cursor: subscription?.is_active? "pointer" : "not-allowed" }}>📷</label>
+              <input
+                id="aadhaar-file"
+                type="file"
+                accept="image/jpeg,image/jpg,image/png"
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+                disabled={!subscription?.is_active}
+              />
+            </div>
+            <label htmlFor="aadhaar-file" className="upload-btn" style={{ cursor: subscription?.is_active? "pointer" : "not-allowed", display: "inline-block", opacity: subscription?.is_active? 1 : 0.5 }}>
+              {selectedFile? "Change Image" : "Upload Aadhaar Image"}
+            </label>
+            <span>JPG, PNG. Max size 5MB. Clear photo of front side.</span>
+          </div>
+
+          <div style={{ marginTop: "20px", padding: "15px", backgroundColor: "#fef3c7", borderRadius: "8px", border: "1px solid #fde68a" }}>
+            <p style={{ fontSize: "13px", color: "#92400e", margin: 0 }}>
+              <strong>Note:</strong> നിങ്ങളുടെ Aadhaar details secure ആയി store ചെയ്യും. Admin verification ശേഷം verified badge കിട്ടും.
+            </p>
+          </div>
+
+          <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+            {isEditing && (
+              <button type="button" onClick={() => setIsEditing(false)} className="save-btn" style={{ backgroundColor: "#6b7280" }}>
+                Cancel
+              </button>
+            )}
+            <button
+              type="submit"
+              className="save-btn"
+              disabled={submitting ||!subscription?.is_active}
+              style={{ opacity:!subscription?.is_active? 0.5 : 1 }}
+            >
+              {submitting? "Submitting..." : isEditing? "Update for Verification" : "Submit for Verification"}
+            </button>
+          </div>
+        </div>
+      </form>
+    );
+  };
 
   if (loading) {
     return <div className="settings-content" style={{ flex: 1, padding: "40px", textAlign: "center" }}>Loading...</div>;
@@ -322,81 +399,4 @@ export default function VerifyAadhaar() {
       )}
     </div>
   );
-
-  function renderForm() {
-    return (
-      <form className="profile-card" onSubmit={handleSubmit}>
-        <div className="profile-right" style={{ width: "100%" }}>
-          <h3>{isEditing? "Update Aadhaar Details" : "Aadhaar Details"}</h3>
-
-          <div className="form-group">
-            <label>Aadhaar Number *</label>
-            <input
-              type="text"
-              value={aadhaarNumber}
-              onChange={(e) => setAadhaarNumber(e.target.value.replace(/\D/g, '').slice(0, 12))}
-              placeholder="12 digit Aadhaar number"
-              maxLength="12"
-              required
-              disabled={!subscription?.is_active}
-            />
-            <span style={{ fontSize: "12px", color: "#667085" }}>
-              Enter 12 digit number without spaces
-            </span>
-          </div>
-
-          <div className="form-group">
-            <label>Aadhaar Card Image *</label>
-            <div className="profile-image-box" style={{ width: "300px", height: "200px", borderRadius: "8px", marginBottom: "10px", border: "2px dashed #e2e8f0" }}>
-              {previewUrl? (
-                <img src={previewUrl} alt="Aadhaar Preview" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-              ) : verification?.aadhaar_image? (
-                <img src={verification.aadhaar_image} alt="Current Aadhaar" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-              ) : (
-                <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#f8fafc", color: "#999", flexDirection: "column", gap: "10px" }}>
-                  <span style={{ fontSize: "40px" }}>📄</span>
-                  <span>No image selected</span>
-                </div>
-              )}
-              <label htmlFor="aadhaar-file" className="upload-icon" style={{ cursor: subscription?.is_active? "pointer" : "not-allowed" }}>📷</label>
-              <input
-                id="aadhaar-file"
-                type="file"
-                accept="image/jpeg,image/jpg,image/png"
-                onChange={handleFileChange}
-                style={{ display: "none" }}
-                disabled={!subscription?.is_active}
-              />
-            </div>
-            <label htmlFor="aadhaar-file" className="upload-btn" style={{ cursor: subscription?.is_active? "pointer" : "not-allowed", display: "inline-block", opacity: subscription?.is_active? 1 : 0.5 }}>
-              {selectedFile? "Change Image" : "Upload Aadhaar Image"}
-            </label>
-            <span>JPG, PNG. Max size 5MB. Clear photo of front side.</span>
-          </div>
-
-          <div style={{ marginTop: "20px", padding: "15px", backgroundColor: "#fef3c7", borderRadius: "8px", border: "1px solid #fde68a" }}>
-            <p style={{ fontSize: "13px", color: "#92400e", margin: 0 }}>
-              <strong>Note:</strong> നിങ്ങളുടെ Aadhaar details secure ആയി store ചെയ്യും. Admin verification ശേഷം verified badge കിട്ടും.
-            </p>
-          </div>
-
-          <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
-            {isEditing && (
-              <button type="button" onClick={() => setIsEditing(false)} className="save-btn" style={{ backgroundColor: "#6b7280" }}>
-                Cancel
-              </button>
-            )}
-            <button
-              type="submit"
-              className="save-btn"
-              disabled={submitting ||!subscription?.is_active}
-              style={{ opacity:!subscription?.is_active? 0.5 : 1 }}
-            >
-              {submitting? "Submitting..." : isEditing? "Update for Verification" : "Submit for Verification"}
-            </button>
-          </div>
-        </div>
-      </form>
-    );
-  }
 }

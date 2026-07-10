@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { updatePasswordAPI } from "../apis/Api";
-import "../styles/passwordSecurity.css";
+import "../styles/password-security.css";
 
 export default function PasswordSecurity() {
   const [formData, setFormData] = useState({
