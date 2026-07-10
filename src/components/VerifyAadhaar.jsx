@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { getAadhaarVerificationAPI, submitAadhaarVerificationAPI, getSubscriptionAPI, getPublicPlansAPI } from "../apis/Api";
+import { getAadhaarVerificationAPI, submitAadhaarVerificationAPI, getSubscriptionAPI, getPublicPlansAPI, createPaymentOrderAPI, verifyPaymentAPI } from "../apis/Api"; // ✅
 import { FaCrown, FaCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
 
 const loadRazorpayScript = () => {
@@ -25,15 +24,12 @@ export default function VerifyAadhaar() {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
   const [isEditing, setIsEditing] = useState(false);
-
   const [subscription, setSubscription] = useState(null);
   const [availablePlans, setAvailablePlans] = useState([]);
   const [showPlans, setShowPlans] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
-  useEffect(() => {
-    fetchAllData();
-  }, []);
+  useEffect(() => { fetchAllData(); }, []);
 
   const fetchAllData = async () => {
     try {
@@ -48,7 +44,6 @@ export default function VerifyAadhaar() {
         setVerification(verifyRes.data);
         setAadhaarNumber(verifyRes.data.aadhaar_number || "");
       }
-
       setSubscription(subRes.data);
       setAvailablePlans(plansRes.data || []);
     } catch (err) {
@@ -75,13 +70,11 @@ export default function VerifyAadhaar() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!subscription?.is_active) {
       setMessage({ type: "error", text: "Verification ചെയ്യാൻ Premium Plan എടുക്കണം!" });
       setShowPlans(true);
       return;
     }
-
     setMessage({ type: "", text: "" });
     if (aadhaarNumber.length!== 12) {
       setMessage({ type: "error", text: "Aadhaar number 12 digits ആയിരിക്കണം" });
@@ -91,7 +84,6 @@ export default function VerifyAadhaar() {
       setMessage({ type: "error", text: "Aadhaar image upload ചെയ്യുക" });
       return;
     }
-
     setSubmitting(true);
     const formData = new FormData();
     formData.append("aadhaar_number", aadhaarNumber);
@@ -101,10 +93,7 @@ export default function VerifyAadhaar() {
       await submitAadhaarVerificationAPI(formData);
       setMessage({ type: "success", text: "Verification request അപ്ഡേറ്റ് ചെയ്തു! Admin വീണ്ടും review ചെയ്യും." });
       setSelectedFile(null);
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-        setPreviewUrl("");
-      }
+      if (previewUrl) { URL.revokeObjectURL(previewUrl); setPreviewUrl(""); }
       setIsEditing(false);
       fetchAllData();
     } catch (err) {
@@ -125,17 +114,9 @@ export default function VerifyAadhaar() {
       setIsProcessingPayment(false);
       return;
     }
-
     try {
-      const token = localStorage.getItem("access");
-      const orderRes = await axios.post(
-        "http://127.0.0.1:8000/api/auth/payment/create-order/",
-        { plan_id: plan.id },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
+      const orderRes = await createPaymentOrderAPI({ plan_id: plan.id }); // ✅ localhost maatti
       const { order_id, amount, currency, key, plan_name } = orderRes.data;
-
       const options = {
         key: key,
         amount: amount,
@@ -145,16 +126,12 @@ export default function VerifyAadhaar() {
         order_id: order_id,
         handler: async function (response) {
           try {
-            await axios.post(
-              "http://127.0.0.1:8000/api/auth/payment/verify/",
-              {
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                plan_id: plan.id
-              },
-              { headers: { Authorization: `Bearer ${token}` } }
-            );
+            await verifyPaymentAPI({ // ✅ localhost maatti
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              plan_id: plan.id
+            });
             toast.success("Payment successful! ഇപ്പോൾ Verify ചെയ്യാം.");
             setShowPlans(false);
             fetchAllData();
@@ -162,18 +139,10 @@ export default function VerifyAadhaar() {
             toast.error("Payment verification failed");
           }
         },
-        prefill: {
-          name: subscription?.user_name || "",
-          email: subscription?.email || ""
-        },
+        prefill: { name: subscription?.user_name || "", email: subscription?.email || "" },
         theme: { color: "#E91E63" },
-        modal: {
-          ondismiss: function() {
-            setIsProcessingPayment(false);
-          }
-        }
+        modal: { ondismiss: function () { setIsProcessingPayment(false); } }
       };
-
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (err) {

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCrown, FaHeadset, FaExternalLinkAlt, FaCheck, FaTimes } from "react-icons/fa";
-import { getSubscriptionAPI, cancelSubscriptionAPI, getPublicPlansAPI } from "../apis/Api";
+import { getSubscriptionAPI, cancelSubscriptionAPI, getPublicPlansAPI, createPaymentOrderAPI, verifyPaymentAPI } from "../apis/Api"; 
 import { toast } from "react-toastify";
-import axios from "axios";
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -61,7 +60,6 @@ export default function Subscription() {
 
   const handlePayment = async (plan) => {
     setIsProcessingPayment(true);
-
     const res = await loadRazorpayScript();
     if (!res) {
       toast.error("Razorpay SDK failed to load");
@@ -70,13 +68,7 @@ export default function Subscription() {
     }
 
     try {
-      const token = localStorage.getItem("access");
-
-      const orderRes = await axios.post(
-        "http://127.0.0.1:8000/api/auth/payment/create-order/",
-        { plan_id: plan.id },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const orderRes = await createPaymentOrderAPI({ plan_id: plan.id }); 
 
       const { order_id, amount, currency, key, plan_name } = orderRes.data;
 
@@ -89,16 +81,12 @@ export default function Subscription() {
         order_id: order_id,
         handler: async function (response) {
           try {
-            await axios.post(
-              "http://127.0.0.1:8000/api/auth/payment/verify/",
-              {
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                plan_id: plan.id
-              },
-              { headers: { Authorization: `Bearer ${token}` } }
-            );
+            await verifyPaymentAPI({ 
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              plan_id: plan.id
+            });
 
             toast.success("Plan changed successfully!");
             setShowPlansModal(false);
@@ -114,7 +102,7 @@ export default function Subscription() {
         },
         theme: { color: "#E91E63" },
         modal: {
-          ondismiss: function() {
+          ondismiss: function () {
             setIsProcessingPayment(false);
           }
         }
@@ -131,7 +119,6 @@ export default function Subscription() {
     }
   };
 
-  
   const handleHelpCenter = () => {
     navigate('/help-support');
   };
@@ -231,7 +218,6 @@ export default function Subscription() {
               <p style={{ margin: "4px 0 0 0", color: "#6c757d", fontSize: "14px" }}>Contact our priority payment support line.</p>
             </div>
           </div>
-
           <button
             onClick={handleHelpCenter}
             style={{ padding: "10px 18px", borderRadius: "6px", border: "1px solid #dee2e6", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", fontWeight: "500" }}
@@ -271,11 +257,9 @@ export default function Subscription() {
                     )}
                     <h4 style={{ fontSize: "20px", margin: "0 0 10px 0", color: "#212529" }}>{plan.name}</h4>
                     <p style={{ fontSize: "32px", fontWeight: "bold", margin: "15px 0", color: "#e91e63" }}>₹{plan.price}</p>
-
                     <div style={{ background: "#fff", padding: "10px", borderRadius: "6px", margin: "15px 0", fontSize: "14px", border: "1px solid #eee" }}>
                       <strong>Validity:</strong> {plan.duration_months} Months
                     </div>
-
                     <div style={{ minHeight: "100px", textAlign: "left", margin: "15px 0" }}>
                       {Array.isArray(plan.features) && plan.features.length > 0? (
                         plan.features.map((feature, idx) => (
@@ -288,7 +272,6 @@ export default function Subscription() {
                         <p style={{ color: "#868e96", fontSize: "14px", textAlign: "center" }}>No features listed</p>
                       )}
                     </div>
-
                     <button
                       onClick={() => handlePayment(plan)}
                       disabled={isCurrentPlan(plan.id) || isProcessingPayment}

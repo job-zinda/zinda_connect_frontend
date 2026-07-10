@@ -1,11 +1,10 @@
 import axios from "axios";
 
-
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 const API = axios.create({
   baseURL: `${API_BASE_URL}/api/auth/`,
-  withCredentials: true  
+  withCredentials: true
 });
 
 const PublicAPI = axios.create({
@@ -25,7 +24,7 @@ API.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 &&!originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const refresh = localStorage.getItem("refresh");
@@ -50,12 +49,10 @@ export const registerAPI = (data) => API.post("register/", data);
 export const loginAPI = (data) => API.post("login/", data);
 export const getUserAPI = () => API.get("user/");
 export const updateProfileTypeAPI = (data) => API.post("profile/update-type/", data);
-
 export const getAdminProfileAPI = () => API.get('admin/profile/');
 export const updateAdminProfileAPI = (formData) => API.put('admin/profile/update/', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
-
 export const updatePasswordAPI = (data) => API.put("change-password/", data);
 
 // ===== PROFILE APIs =====
@@ -74,7 +71,7 @@ export const resetPasswordAPI = (data) => API.post("forgot-password/reset/", dat
 export const updateBasicDetailsAPI = (data) => {
   const formData = new FormData();
   Object.keys(data).forEach((key) => {
-    if (key !== 'profile_picture') {
+    if (key!== 'profile_picture') {
       formData.append(key, data[key]);
     }
   });
@@ -85,7 +82,6 @@ export const updateBasicDetailsAPI = (data) => {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
 };
-
 export const updateReligionAPI = (data) => API.post("profile/religion/", data);
 export const updateEducationCareerAPI = (data) => API.post("profile/education/", data);
 export const updateLocationAPI = (data) => API.post("profile/location/", data);
@@ -126,6 +122,10 @@ export const updateNotificationsAPI = (data) => API.put("notifications/", data);
 export const getSubscriptionAPI = () => API.get("subscription/");
 export const cancelSubscriptionAPI = () => API.delete("subscription/");
 
+// ===== PAYMENT =====
+export const createPaymentOrderAPI = (data) => API.post("payment/create-order/", data);
+export const verifyPaymentAPI = (data) => API.post("payment/verify/", data);
+
 // ===== REPORT PROBLEM =====
 export const reportProblemAPI = (formData) => API.post("report-problem/", formData, {
   headers: { 'Content-Type': 'multipart/form-data' }
@@ -164,7 +164,7 @@ export const createUserByAdminAPI = (data) => API.post("admin/users/", data);
 // ===== ADMIN PROFILES MANAGEMENT =====
 export const getAllProfilesAdminAPI = (params) => API.get("admin/profiles/", { params });
 export const approveProfileAPI = (id) => API.post(`admin/profiles/${id}/verify/`, { status: 'verified' });
-export const rejectProfileAPI = (id, data) => API.post(`admin/profiles/${id}/verify/`, { status: 'rejected', ...data });
+export const rejectProfileAPI = (id, data) => API.post(`admin/profiles/${id}/verify/`, { status: 'rejected',...data });
 export const deleteProfileAPI = (id) => API.delete(`admin/profiles/${id}/`);
 export const getAdminProfileDetailsAPI = (id) => API.get(`admin/profiles/${id}/`);
 
@@ -174,6 +174,9 @@ export const getMatchStatsAPI = () => API.get("admin/matches/stats/");
 
 // ===== BANNERS/ADS =====
 export const getAllAdsAPI = () => API.get("admin/ads/");
+export const createAdAPI = (formData) => API.post("admin/ads/", formData, { // ✅ NEW
+  headers: { 'Content-Type': 'multipart/form-data' }
+});
 export const deleteAdAPI = (id) => API.delete(`admin/ads/${id}/`);
 export const updateAdAPI = (id, data) => API.patch(`admin/ads/${id}/`, data);
 
@@ -187,10 +190,9 @@ export const submitAadhaarVerificationAPI = (formData) =>
   API.post("aadhaar-verification/", formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
-
 export const getAdminAadhaarListAPI = (params) => API.get("admin/aadhaar-verifications/", { params });
 export const approveAadhaarAPI = (userId) => API.post(`admin/aadhaar-verification/${userId}/`, { status: 'approved' });
-export const rejectAadhaarAPI = (userId, data) => API.post(`admin/aadhaar-verification/${userId}/`, { status: 'rejected', ...data });
+export const rejectAadhaarAPI = (userId, data) => API.post(`admin/aadhaar-verification/${userId}/`, { status: 'rejected',...data });
 export const getAadhaarDetailsAPI = (userId) => API.get(`admin/aadhaar-verification/${userId}/`);
 
 export const getMyMatchesAPI = () => API.get("my-matches/");
@@ -199,7 +201,6 @@ export const getMyMatchesAPI = () => API.get("my-matches/");
 export const getAdminStoriesAPI = () => API.get("admin/stories/");
 export const createAdminStoryAPI = (data) => API.post("admin/stories/", data);
 export const deleteAdminStoryAPI = (id) => API.delete(`admin/stories/${id}/`);
-
 export const updateSuccessStoryAPI = (id, formData) => {
   const token = localStorage.getItem("access");
   return API.put(`admin/stories/${id}/`, formData, {

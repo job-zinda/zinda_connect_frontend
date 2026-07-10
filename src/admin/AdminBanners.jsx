@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaTrash, FaEdit, FaEye, FaToggleOn, FaToggleOff, FaUpload } from "react-icons/fa";
-import { getAllAdsAPI, deleteAdAPI, updateAdAPI } from "../apis/Api";
+import { getAllAdsAPI, createAdAPI, deleteAdAPI, updateAdAPI } from "../apis/Api";
 import "../styles/adminBanners.css";
 
 export default function AdminBanners() {
@@ -13,35 +13,26 @@ export default function AdminBanners() {
   const [editId, setEditId] = useState(null);
   const fileInputRef = useRef(null);
 
-  useEffect(() => {
-    fetchBanners();
-  }, []);
+  useEffect(() => { fetchBanners(); }, []);
 
   const fetchBanners = async () => {
     try {
       setLoading(true);
       const res = await getAllAdsAPI();
-      console.log("Banners:", res.data);
       setBanners(res.data || []);
-    } catch (err) {
-      console.error("Failed to fetch banners", err);
-    } finally {
-      setLoading(false);
-    }
+    } catch (err) { console.error("Failed to fetch banners", err); }
+    finally { setLoading(false); }
   };
 
   const handleAdSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedFile && !editId) {
-      alert("ദയവായി ഒരു ഫയൽ തിരഞ്ഞെടുക്കുക");
-      return;
-    }
+    if (!selectedFile &&!editId) { alert("ദയവായി ഒരു ഫയൽ തിരഞ്ഞെടുക്കുക"); return; }
 
     const formData = new FormData();
     formData.append("title", adTitle);
     if (selectedFile) formData.append("file", selectedFile);
     if (adLink) formData.append("link_url", adLink);
-    formData.append("is_active", "true"); 
+    formData.append("is_active", "true");
 
     try {
       setUploading(true);
@@ -49,82 +40,38 @@ export default function AdminBanners() {
         await updateAdAPI(editId, formData);
         alert("പരസ്യം അപ്ഡേറ്റ് ചെയ്തു!");
       } else {
-        const token = localStorage.getItem("access");
-        const response = await fetch(`http://127.0.0.1:8000/api/auth/admin/ads/`, {
-          method: "POST",
-          headers: { "Authorization": `Bearer ${token}` },
-          body: formData,
-        });
-        if (!response.ok) throw new Error("Upload failed");
+        await createAdAPI(formData); 
         alert("പരസ്യം വിജയകരമായി അപ്‌ലോഡ് ചെയ്തു!");
       }
-      resetForm();
-      fetchBanners();
-    } catch (err) {
-      console.error(err);
-      alert("പ്രവർത്തനം പരാജയപ്പെട്ടു");
-    } finally {
-      setUploading(false);
-    }
+      resetForm(); fetchBanners();
+    } catch (err) { console.error(err); alert("പ്രവർത്തനം പരാജയപ്പെട്ടു"); }
+    finally { setUploading(false); }
   };
 
   const handleDelete = async (id) => {
     if (window.confirm("ഈ പരസ്യം ഡിലീറ്റ് ചെയ്യണോ?")) {
-      try {
-        await deleteAdAPI(id);
-        setBanners(banners.filter((b) => b.id !== id));
-        alert("പരസ്യം ഡിലീറ്റ് ചെയ്തു");
-      } catch (err) {
-        alert("ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല");
-      }
+      try { await deleteAdAPI(id); setBanners(banners.filter((b) => b.id!== id)); alert("പരസ്യം ഡിലീറ്റ് ചെയ്തു"); }
+      catch (err) { alert("ഡിലീറ്റ് ചെയ്യാൻ കഴിഞ്ഞില്ല"); }
     }
   };
 
   const handleToggleActive = async (banner) => {
     try {
-      const token = localStorage.getItem("access");
-      const response = await fetch(`http://127.0.0.1:8000/api/auth/admin/ads/${banner.id}/`, {
-        method: "PATCH",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ is_active: !banner.is_active }),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Toggle error:", errorData);
-        throw new Error("Toggle failed");
-      }
-      
+      await updateAdAPI(banner.id, { is_active:!banner.is_active }); 
       fetchBanners();
-    } catch (err) {
-      console.error(err);
-      alert("സ്റ്റാറ്റസ് മാറ്റാൻ കഴിഞ്ഞില്ല");
-    }
+    } catch (err) { console.error(err); alert("സ്റ്റാറ്റസ് മാറ്റാൻ കഴിഞ്ഞില്ല"); }
   };
 
   const handleEdit = (banner) => {
-    setEditId(banner.id);
-    setAdTitle(banner.title);
-    setAdLink(banner.link_url || "");
-    setSelectedFile(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setEditId(banner.id); setAdTitle(banner.title); setAdLink(banner.link_url || "");
+    setSelectedFile(null); window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const resetForm = () => {
-    setAdTitle("");
-    setAdLink("");
-    setSelectedFile(null);
-    setEditId(null);
-    if(fileInputRef.current) fileInputRef.current.value = ""; 
+    setAdTitle(""); setAdLink(""); setSelectedFile(null); setEditId(null);
+    if(fileInputRef.current) fileInputRef.current.value = "";
   };
-
-  
-  const handleFileClick = () => {
-    fileInputRef.current.click();
-  };
+  const handleFileClick = () => { fileInputRef.current.click(); };
 
   return (
     <div className="admin-content">

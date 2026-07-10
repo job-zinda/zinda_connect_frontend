@@ -1,23 +1,10 @@
 import React, { useRef, useState } from "react";
-import axios from "axios";
+import { verifyOTPAPI } from "../apis/Api"; // ✅ localhost maatti
 import "../styles/otpModal.css";
 import ResetPasswordModal from "./ResetPasswordModal";
 
-export default function EnterOtpModal({
-  onClose,
-  onBack,
-  email 
-}) {
-
-  const [otp, setOtp] = useState([
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
-  ]);
-
+export default function EnterOtpModal({ onClose, onBack, email }) {
+  const [otp, setOtp] = useState(["", "", ""]);
   const [showReset, setShowReset] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -52,16 +39,13 @@ export default function EnterOtpModal({
 
     setLoading(true);
     try {
-      const res = await axios.post(
-        "http://127.0.0.1:8000/api/auth/forgot-password/verify-otp/",
-        {
-          email: email.toLowerCase(), 
-          otp: otpCode,
-        }
-      );
+      const res = await verifyOTPAPI({ // ✅ Api.js use cheyyunnu
+        email: email.toLowerCase(),
+        otp: otpCode,
+      });
 
       if (res.status === 200) {
-        setShowReset(true); 
+        setShowReset(true);
       }
     } catch (err) {
       console.log("VERIFY OTP ERROR:", err.response?.data);
@@ -80,7 +64,7 @@ export default function EnterOtpModal({
       <ResetPasswordModal
         onClose={onClose}
         onBack={() => setShowReset(false)}
-        email={email} 
+        email={email}
       />
     );
   }
@@ -93,7 +77,7 @@ export default function EnterOtpModal({
           <button type="button" onClick={onClose}>×</button>
         </div>
 
-        {error && <p style={{color: 'red', textAlign: 'center', marginBottom: '10px'}}>{error}</p>}
+        {error && <p style={{ color: 'red', textAlign: 'center', marginBottom: '10px' }}>{error}</p>}
 
         <div className="otp-input-row">
           {otp.map((digit, index) => (
@@ -118,7 +102,7 @@ export default function EnterOtpModal({
           <button
             type="button"
             className="otp-confirm-btn"
-            onClick={handleVerifyOTP} 
+            onClick={handleVerifyOTP}
             disabled={loading}
           >
             {loading? "Verifying..." : "Confirm"}

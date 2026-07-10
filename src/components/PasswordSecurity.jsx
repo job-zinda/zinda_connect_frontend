@@ -1,31 +1,18 @@
 import React, { useState } from "react";
-import { FaEye, FaEyeSlash, FaLock, FaShieldAlt } from "react-icons/fa";
 import { updatePasswordAPI } from "../apis/Api";
+import "../styles/passwordSecurity.css";
 
-const PasswordSecurity = () => {
+export default function PasswordSecurity() {
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
-
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
-  const [showPasswords, setShowPasswords] = useState({
-    current: false,
-    new: false,
-    confirm: false,
-  });
-
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({...prev, [name]: value }));
-    setMessage({ type: "", text: "" });
-  };
-
-  const togglePasswordVisibility = (field) => {
-    setShowPasswords((prev) => ({...prev, [field]:!prev[field] }));
+    setFormData({...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -33,50 +20,36 @@ const PasswordSecurity = () => {
     setMessage({ type: "", text: "" });
 
     if (!formData.currentPassword ||!formData.newPassword ||!formData.confirmPassword) {
-      setMessage({ type: "error", text: "Ellaa fieldsum fill cheyyuka" });
+      setMessage({ type: "error", text: "Please fill all fields" });
       return;
     }
 
     if (formData.newPassword.length < 8) {
-      setMessage({ type: "error", text: "New password 8 characters minimum venam" });
+      setMessage({ type: "error", text: "New password 8 characters minimum needed" });
       return;
     }
 
     if (formData.newPassword!== formData.confirmPassword) {
-      setMessage({ type: "error", text: "New password match aavunnilla" });
-      return;
-    }
-
-    if (formData.currentPassword === formData.newPassword) {
-      setMessage({
-        type: "error",
-        text: "New password current password-il ninnu vyathyasam venam",
-      });
+      setMessage({ type: "error", text: "New password not matching" });
       return;
     }
 
     setSaving(true);
 
     try {
-      
       await updatePasswordAPI({
-        old_password: formData.currentPassword,
+        current_password: formData.currentPassword, 
         new_password: formData.newPassword,
-        confirm_password: formData.confirmPassword, 
+        confirm_password: formData.confirmPassword,
       });
 
       setMessage({ type: "success", text: "Password successfully updated!" });
-      setFormData({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
+      setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });
     } catch (err) {
       const errorMsg =
         err.response?.data?.error ||
         err.response?.data?.detail ||
-        "Password update failed. Please check your current password ";
-
+        "Password update failed";
       setMessage({ type: "error", text: errorMsg });
     } finally {
       setSaving(false);
@@ -84,108 +57,52 @@ const PasswordSecurity = () => {
   };
 
   return (
-    <div className="settings-content" style={{ flex: 1 }}>
-    <div className="password-security-page">
-      <div className="settings-header">
-        <div>
-          <h1>Password & Security</h1>
-          <p>Manage your password and account security.</p>
-        </div>
-      </div>
+    <div className="password-security">
+      <h2>Password & Security</h2>
+      <p>Change your password here</p>
 
-      <form className="password-card" onSubmit={handleSubmit}>
-        <div className="password-card-title">
-          <div className="password-title-icon">
-            <FaShieldAlt />
-          </div>
-          <div>
-            <h3>Change Password</h3>
-            <p>Use a strong password with at least 8 characters.</p>
-          </div>
-        </div>
+      {message.text && (
+        <div className={`alert ${message.type}`}>{message.text}</div>
+      )}
 
-        {message.text && (
-          <div className={`password-message ${message.type}`}>
-            {message.text}
-          </div>
-        )}
-
-        <div className="password-form-group">
+      <form onSubmit={handleSubmit} className="password-form">
+        <div className="form-group">
           <label>Current Password</label>
-          <div className="password-input-wrap">
-            <FaLock className="password-lock-icon" />
-            <input
-              type={showPasswords.current? "text" : "password"}
-              name="currentPassword"
-              value={formData.currentPassword}
-              onChange={handleChange}
-              placeholder="Enter current password"
-              autoComplete="current-password"
-              required
-            />
-            <button
-              type="button"
-              className="password-eye-btn"
-              onClick={() => togglePasswordVisibility("current")}
-            >
-              {showPasswords.current? <FaEyeSlash /> : <FaEye />}
-            </button>
-          </div>
+          <input
+            type="password"
+            name="currentPassword"
+            value={formData.currentPassword}
+            onChange={handleChange}
+            placeholder="Enter current password"
+          />
         </div>
 
-        <div className="password-form-group">
+        <div className="form-group">
           <label>New Password</label>
-          <div className="password-input-wrap">
-            <FaLock className="password-lock-icon" />
-            <input
-              type={showPasswords.new? "text" : "password"}
-              name="newPassword"
-              value={formData.newPassword}
-              onChange={handleChange}
-              placeholder="Enter new password"
-              autoComplete="new-password"
-              required
-            />
-            <button
-              type="button"
-              className="password-eye-btn"
-              onClick={() => togglePasswordVisibility("new")}
-            >
-              {showPasswords.new? <FaEyeSlash /> : <FaEye />}
-            </button>
-          </div>
+          <input
+            type="password"
+            name="newPassword"
+            value={formData.newPassword}
+            onChange={handleChange}
+            placeholder="Enter new password"
+          />
         </div>
 
-        <div className="password-form-group">
-          <label>Confirm Password</label>
-          <div className="password-input-wrap">
-            <FaLock className="password-lock-icon" />
-            <input
-              type={showPasswords.confirm? "text" : "password"}
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirm new password"
-              autoComplete="new-password"
-              required
-            />
-            <button
-              type="button"
-              className="password-eye-btn"
-              onClick={() => togglePasswordVisibility("confirm")}
-            >
-              {showPasswords.confirm? <FaEyeSlash /> : <FaEye />}
-            </button>
-          </div>
+        <div className="form-group">
+          <label>Confirm New Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            placeholder="Confirm new password"
+          />
         </div>
 
-        <button type="submit" className="password-submit-btn" disabled={saving}>
-          {saving? "Updating..." : "Update Password"}
+        <button type="submit" className="save-btn" disabled={saving}>
+          {saving? "Saving..." : "Change Password"}
         </button>
       </form>
     </div>
-    </div>
   );
-};
-
-export default PasswordSecurity;
+}

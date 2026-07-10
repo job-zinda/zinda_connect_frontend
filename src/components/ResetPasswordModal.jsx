@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { resetPasswordAPI } from "../apis/Api"; // ✅ Api.js ninnu
 import "../styles/resetPassword.css";
 
 export default function ResetPasswordModal({ onClose, onBack, email }) {
@@ -28,20 +28,14 @@ export default function ResetPasswordModal({ onClose, onBack, email }) {
 
     setLoading(true);
     try {
-     
-      const res = await axios.post(
-        "http://127.0.0.1:8000/api/auth/forgot-password/reset/",
-        {
-          email: email.toLowerCase(),
-          new_password: newPassword,
-          confirm_password: confirmPassword,
-        }
-      );
+      await resetPasswordAPI({ // ✅ Api.js use cheyyunnu
+        email: email.toLowerCase(),
+        new_password: newPassword,
+        confirm_password: confirmPassword,
+      });
 
-      if (res.status === 200) {
-        alert("Password reset successful! Please login with new password.");
-        onClose(); 
-      }
+      alert("Password reset successful! Please login with new password.");
+      onClose();
     } catch (err) {
       console.log("RESET ERROR:", err.response?.data);
       if (err.response?.data?.error) {
