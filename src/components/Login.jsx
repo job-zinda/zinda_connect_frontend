@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { loginAPI } from "../apis/Api"; 
 import "../styles/login.css";
 
 import logo from "../assets/image.png";
@@ -27,21 +26,21 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    
-    if (!loginInput || !password) {
+
+    if (!loginInput ||!password) {
       setError("Please enter email and password");
       return;
     }
-    
+
     setLoading(true);
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/auth/login/", {
+      
+      const res = await loginAPI({
         email: loginInput.toLowerCase(),
         password: password,
       });
 
       localStorage.setItem("access", res.data.access);
-      localStorage.setItem("access", res.data.token || res.data.access); // For backward compatibility
       localStorage.setItem("refresh", res.data.refresh);
       localStorage.setItem("role", res.data.role);
       localStorage.setItem("email", res.data.email);
@@ -60,7 +59,7 @@ export default function Login() {
       } else if (err.response?.data?.detail) {
         setError(err.response.data.detail);
       } else {
-        setError("Server Error");
+        setError("Server Error. Try again.");
       }
     } finally {
       setLoading(false);
@@ -69,14 +68,12 @@ export default function Login() {
 
   return (
     <main className="login-page">
-      {/* ✅ LEFT PANEL - className മാറ്റി */}
       <section className="login-left">
         <div className="login-logo">
           <img src={logo} alt="Zinda Connect" />
         </div>
       </section>
 
-      {/* ✅ RIGHT PANEL - className മാറ്റി */}
       <section className="login-right">
         <div className="login-box">
           <div className="login-heart-circle">
@@ -88,7 +85,6 @@ export default function Login() {
           {error && <div className="login-error">{error}</div>}
 
           <form className="login-form" onSubmit={handleLogin} autoComplete="off">
-            {/* ✅ EMAIL - className മാറ്റി */}
             <div className="login-input">
               <img src={personIcon} alt="person" className="input-icon" />
               <input
@@ -101,11 +97,10 @@ export default function Login() {
               />
             </div>
 
-            {/* ✅ PASSWORD - className മാറ്റി */}
             <div className="login-input">
               <img src={lockIcon} alt="lock" className="input-icon" />
               <input
-                type={showPassword ? "text" : "password"}
+                type={showPassword? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -117,12 +112,10 @@ export default function Login() {
                 className="eye-btn"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                <img src={showPassword ? eyeIconopen : eyeCloseIcon} alt="toggle password" />
+                <img src={showPassword? eyeIconopen : eyeCloseIcon} alt="toggle password" />
               </button>
             </div>
-            
 
-            {/* ✅ FORGOT - className മാറ്റി */}
             <button
               type="button"
               className="forgot-link"
@@ -132,7 +125,7 @@ export default function Login() {
             </button>
 
             <button type="submit" className="login-btn" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
+              {loading? "Logging in..." : "Login"}
             </button>
           </form>
 

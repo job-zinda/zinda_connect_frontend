@@ -20,19 +20,19 @@ const PasswordSecurity = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({...prev, [name]: value }));
     setMessage({ type: "", text: "" });
   };
 
   const togglePasswordVisibility = (field) => {
-    setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }));
+    setShowPasswords((prev) => ({...prev, [field]:!prev[field] }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ type: "", text: "" });
 
-    if (!formData.currentPassword || !formData.newPassword || !formData.confirmPassword) {
+    if (!formData.currentPassword ||!formData.newPassword ||!formData.confirmPassword) {
       setMessage({ type: "error", text: "Ellaa fieldsum fill cheyyuka" });
       return;
     }
@@ -42,7 +42,7 @@ const PasswordSecurity = () => {
       return;
     }
 
-    if (formData.newPassword !== formData.confirmPassword) {
+    if (formData.newPassword!== formData.confirmPassword) {
       setMessage({ type: "error", text: "New password match aavunnilla" });
       return;
     }
@@ -58,12 +58,14 @@ const PasswordSecurity = () => {
     setSaving(true);
 
     try {
+      
       await updatePasswordAPI({
         old_password: formData.currentPassword,
         new_password: formData.newPassword,
+        confirm_password: formData.confirmPassword, 
       });
 
-      setMessage({ type: "success", text: "Password successfully update cheythu!" });
+      setMessage({ type: "success", text: "Password successfully updated!" });
       setFormData({
         currentPassword: "",
         newPassword: "",
@@ -73,7 +75,7 @@ const PasswordSecurity = () => {
       const errorMsg =
         err.response?.data?.error ||
         err.response?.data?.detail ||
-        "Password update failed. Current password sheriyano ennu nokkuka";
+        "Password update failed. Please check your current password ";
 
       setMessage({ type: "error", text: errorMsg });
     } finally {
@@ -83,7 +85,6 @@ const PasswordSecurity = () => {
 
   return (
     <div className="settings-content" style={{ flex: 1 }}>
-
     <div className="password-security-page">
       <div className="settings-header">
         <div>
@@ -97,7 +98,6 @@ const PasswordSecurity = () => {
           <div className="password-title-icon">
             <FaShieldAlt />
           </div>
-
           <div>
             <h3>Change Password</h3>
             <p>Use a strong password with at least 8 characters.</p>
@@ -112,12 +112,10 @@ const PasswordSecurity = () => {
 
         <div className="password-form-group">
           <label>Current Password</label>
-
           <div className="password-input-wrap">
             <FaLock className="password-lock-icon" />
-
             <input
-              type={showPasswords.current ? "text" : "password"}
+              type={showPasswords.current? "text" : "password"}
               name="currentPassword"
               value={formData.currentPassword}
               onChange={handleChange}
@@ -125,26 +123,22 @@ const PasswordSecurity = () => {
               autoComplete="current-password"
               required
             />
-
             <button
               type="button"
               className="password-eye-btn"
               onClick={() => togglePasswordVisibility("current")}
-              aria-label="Toggle current password visibility"
             >
-              {showPasswords.current ? <FaEyeSlash /> : <FaEye />}
+              {showPasswords.current? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
         </div>
 
         <div className="password-form-group">
           <label>New Password</label>
-
           <div className="password-input-wrap">
             <FaLock className="password-lock-icon" />
-
             <input
-              type={showPasswords.new ? "text" : "password"}
+              type={showPasswords.new? "text" : "password"}
               name="newPassword"
               value={formData.newPassword}
               onChange={handleChange}
@@ -152,26 +146,22 @@ const PasswordSecurity = () => {
               autoComplete="new-password"
               required
             />
-
             <button
               type="button"
               className="password-eye-btn"
               onClick={() => togglePasswordVisibility("new")}
-              aria-label="Toggle new password visibility"
             >
-              {showPasswords.new ? <FaEyeSlash /> : <FaEye />}
+              {showPasswords.new? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
         </div>
 
         <div className="password-form-group">
           <label>Confirm Password</label>
-
           <div className="password-input-wrap">
             <FaLock className="password-lock-icon" />
-
             <input
-              type={showPasswords.confirm ? "text" : "password"}
+              type={showPasswords.confirm? "text" : "password"}
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
@@ -179,25 +169,22 @@ const PasswordSecurity = () => {
               autoComplete="new-password"
               required
             />
-
             <button
               type="button"
               className="password-eye-btn"
               onClick={() => togglePasswordVisibility("confirm")}
-              aria-label="Toggle confirm password visibility"
             >
-              {showPasswords.confirm ? <FaEyeSlash /> : <FaEye />}
+              {showPasswords.confirm? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
         </div>
 
         <button type="submit" className="password-submit-btn" disabled={saving}>
-          {saving ? "Updating..." : "Update Password"}
+          {saving? "Updating..." : "Update Password"}
         </button>
       </form>
     </div>
     </div>
-
   );
 };
 

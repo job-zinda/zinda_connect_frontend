@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios"; 
+import { sendOTPAPI } from "../apis/Api"; 
 import "../styles/modal.css";
 import EnterOtpModal from "./EnterOtpModal";
 import emailIcon from "../assets/image copy 6.png";
@@ -12,8 +12,7 @@ export default function ForgotPasswordModal({ onClose }) {
 
   const handleSendOTP = async () => {
     setError("");
-    
-    // 1. Validation
+
     if (!email) {
       setError("Email is required");
       return;
@@ -25,20 +24,15 @@ export default function ForgotPasswordModal({ onClose }) {
 
     setLoading(true);
     try {
-      // 2. API Call to Django Backend
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/auth/forgot-password/send-otp/",
-        { email: email }
-      );
       
-      // 3. Success 
+      const response = await sendOTPAPI({ email: email });
+
       if (response.status === 200) {
         setShowOtpModal(true);
       }
     } catch (err) {
-      // 4. Error handling
       if (err.response?.data?.error) {
-        setError(err.response.data.error); 
+        setError(err.response.data.error);
       } else {
         setError("Something went wrong. Try again.");
       }
@@ -52,7 +46,7 @@ export default function ForgotPasswordModal({ onClose }) {
       <EnterOtpModal
         onClose={onClose}
         onBack={() => setShowOtpModal(false)}
-        email={email} 
+        email={email}
       />
     );
   }
@@ -69,9 +63,9 @@ export default function ForgotPasswordModal({ onClose }) {
           <span>
             <img src={emailIcon} alt="" />
           </span>
-          <input 
-            type="email" 
-            placeholder="Email" 
+          <input
+            type="email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -90,7 +84,7 @@ export default function ForgotPasswordModal({ onClose }) {
             onClick={handleSendOTP}
             disabled={loading}
           >
-            {loading ? "Sending..." : "Send OTP"}
+            {loading? "Sending..." : "Send OTP"}
           </button>
         </div>
       </div>
