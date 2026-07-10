@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaHeart, FaEye, FaBullhorn } from "react-icons/fa";
 import { getNotificationsAPI, updateNotificationsAPI } from "../apis/Api";
 
 const Notifications = () => {
   const [settings, setSettings] = useState({
     messages: true,
-    favourites: true, 
+    favourites: true,
     profile_views: true,
     likes: true,
     updates_news: false,
@@ -14,7 +13,6 @@ const Notifications = () => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchSettings();
@@ -23,8 +21,6 @@ const Notifications = () => {
   const fetchSettings = async () => {
     try {
       const res = await getNotificationsAPI();
-      console.log("Fetched settings:", res.data); 
-     
       setSettings({
         messages: res.data.messages?? true,
         favourites: res.data.favourites?? true,
@@ -47,10 +43,8 @@ const Notifications = () => {
   const handleSaveChanges = async () => {
     setSaving(true);
     try {
-      const res = await updateNotificationsAPI(settings);
-      console.log("Saved:", res.data);
+      await updateNotificationsAPI(settings);
       alert("നോട്ടിഫിക്കേഷൻ ക്രമീകരണങ്ങൾ മാറ്റിയെഴുതി!");
-     
       await fetchSettings();
     } catch (err) {
       console.error("Save error:", err);
@@ -73,49 +67,43 @@ const Notifications = () => {
 
   return (
     <div className="settings-content" style={{ flex: 1 }}>
-    
-    <div className="notifications-page">
-      <div className="page-header">
-        <h2>Notifications</h2>
-      </div>
+      <div className="notifications-page">
+        <div className="page-header">
+          <h2>Notifications</h2>
+        </div>
 
-      <div className="settings-card notification-card">
-        {notificationItems.map((item) => (
-          <div className="notification-item" key={item.key}>
-            <div className="notification-left">
-              <div className="notification-icon">{item.icon}</div>
-              <div>
-                <h4>{item.title}</h4>
-                <p>{item.description}</p>
+        <div className="settings-card notification-card">
+          {notificationItems.map((item) => (
+            <div className="notification-item" key={item.key}>
+              <div className="notification-left">
+                <div className="notification-icon">{item.icon}</div>
+                <div>
+                  <h4>{item.title}</h4>
+                  <p>{item.description}</p>
+                </div>
               </div>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={Boolean(settings[item.key])}
+                  onChange={() => handleToggle(item.key)}
+                />
+                <span className="slider"></span>
+              </label>
             </div>
-            <label className="switch">
-              <input 
-                type="checkbox" 
-                checked={Boolean(settings[item.key])} 
-                onChange={() => handleToggle(item.key)} 
-              />
-              <span className="slider"></span>
-            </label>
-          </div>
-        ))}
+          ))}
 
-        <button 
-          className="save-btn-full" 
-          onClick={handleSaveChanges}
-          disabled={saving}
-        >
-          {saving? "Saving..." : "Save Changes"}
-        </button>
+          <button
+            className="save-btn-full"
+            onClick={handleSaveChanges}
+            disabled={saving}
+          >
+            {saving? "Saving..." : "Save Changes"}
+          </button>
+        </div>
       </div>
     </div>
-    </div>
-
   );
 };
 
 export default Notifications;
-
-
-
-

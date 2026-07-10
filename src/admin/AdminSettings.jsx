@@ -28,7 +28,12 @@ export default function AdminSettings() {
     bio: "",
     profile_image: null,
   });
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
+  const getImageUrl = (path) => {
+  if (!path) return null;
+  return path.startsWith("http")? path : `${API_BASE_URL}${path}`;
+  };
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -72,7 +77,7 @@ export default function AdminSettings() {
         profile_image: null,
       });
 
-      setPreviewImage(profileData.profile_image_url || profileData.profile_image || null);
+      setPreviewImage(getImageUrl(profileData.profile_image_url || profileData.profile_image));
     } catch (err) {
       console.error(err);
       toast.error("Failed to load profile details");

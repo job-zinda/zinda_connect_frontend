@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+const getImageUrl = (path) => {
+  if (!path) return null;
+  if (path instanceof File) return URL.createObjectURL(path);
+  return path.startsWith("http")? path : `${API_BASE_URL}${path}`;
+};
 
 const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChange, handleNext, loading }) => {
   const [preview, setPreview] = useState(null);
-  const [imageError, setImageError] = useState(""); // ✅ NEW: error state
+  const [imageError, setImageError] = useState("");
 
   const genderOptions = [
     { value: 'M', label: 'Male' },
@@ -60,7 +67,7 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
 
   const selectStyles = {
     control: (base, state) => ({
-   ...base,
+  ...base,
       minHeight: '42px',
       border: 'none',
       borderBottom: state.isFocused? '2px solid #e91662' : '2px solid #e0e0e0',
@@ -77,29 +84,25 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
 
   useEffect(() => {
     if (formData.profile_picture) {
-      if (formData.profile_picture instanceof File) {
-        const objectUrl = URL.createObjectURL(formData.profile_picture);
-        setPreview(objectUrl);
-        setImageError(""); // ✅ image add cheyyumbo error pokum
-        return () => URL.revokeObjectURL(objectUrl);
-      } else {
-        setPreview(formData.profile_picture);
-        setImageError("");
-      }
+      const url = getImageUrl(formData.profile_picture);
+      setPreview(url);
+      setImageError("");
+      return () => {
+        if (formData.profile_picture instanceof File) URL.revokeObjectURL(url);
+      };
     } else {
       setPreview(null);
     }
   }, [formData.profile_picture]);
 
-  // ✅ NEW: Form submit check
   const onSubmit = (e) => {
     e.preventDefault();
     if (!formData.profile_picture) {
       setImageError("Profile picture നിർബന്ധമാണ് *");
-      return; // stop here
+      return;
     }
     setImageError("");
-    handleNext(e); // all ok, next page
+    handleNext(e);
   };
 
   const onFileSelect = (e) => {
@@ -111,13 +114,13 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
     <div className="form-container">
       <h2>Basic Details ({profileType === 'parent'? 'Parent Mode' : 'Self Mode'})</h2>
 
-      <form onSubmit={onSubmit}> {/* ✅ onSubmit maatti */}
+      <form onSubmit={onSubmit}>
 
         {/* Profile Pic with Pencil Icon */}
         <div className="profile-pic-upload">
           <div className="avatar-wrapper" style={{border: imageError? "2px solid red" : "none", borderRadius: "50%"}}>
             <img
-              src={preview &&!preview.includes("via.placeholder.com")? preview : defaultAvatar}
+              src={preview || defaultAvatar}
               alt="Profile Preview"
               className="avatar-img"
               onError={(e) => {
@@ -129,7 +132,7 @@ const BasicDetails = ({ formData, profileType, handleInputChange, handleFileChan
           </div>
           <input type="file" accept="image/*" onChange={onFileSelect} id="profile-file-input" style={{ display: 'none' }} />
 
-          {/* ✅ Error Message */}
+          {/* Error Message */}
           {imageError && <p style={{color: "red", fontSize: "13px", marginTop: "8px", textAlign: "center"}}>{imageError}</p>}
           {!formData.profile_picture && <p style={{fontSize: "12px", color: "#e91662", textAlign: "center"}}>* Profile Picture Required</p>}
         </div>

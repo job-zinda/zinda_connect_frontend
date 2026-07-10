@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { FaDownload, FaTimes } from "react-icons/fa";
 import "../styles/AdminStories.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+
 export default function AdminStories() {
   const [showForm, setShowForm] = useState(false);
   const [stories, setStories] = useState([]);
@@ -23,6 +25,11 @@ export default function AdminStories() {
   useEffect(() => {
     fetchStories();
   }, []);
+
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    return path.startsWith("http")? path : `${API_BASE_URL}${path}`;
+  };
 
   const fetchStories = async () => {
     try {
@@ -79,8 +86,8 @@ export default function AdminStories() {
       image_one: null,
       image_two: null
     });
-    setPreviewOne(story.image_one? (story.image_one.startsWith('http')? story.image_one : `http://127.0.0.1:8000${story.image_one}`) : null);
-    setPreviewTwo(story.image_two? (story.image_two.startsWith('http')? story.image_two : `http://127.0.0.1:8000${story.image_two}`) : null);
+    setPreviewOne(getImageUrl(story.image_one));
+    setPreviewTwo(getImageUrl(story.image_two));
     setShowForm(true);
   };
 

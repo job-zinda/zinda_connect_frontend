@@ -3,6 +3,13 @@ import { FaSearch, FaPlus, FaEye, FaEdit, FaTrash, FaTimes } from "react-icons/f
 import { getAllUsersAPI, deleteUserAPI, createUserByAdminAPI, getUserDetailsAPI } from "../apis/Api";
 import "../styles/adminUsers.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+
+const getImageUrl = (path) => {
+  if (!path) return "https://via.placeholder.com/40";
+  return path.startsWith("http")? path : `${API_BASE_URL}${path}`;
+};
+
 export default function AdminUsers() {
   const [search, setSearch] = useState("");
   const [role, setRole] = useState("All Roles");
@@ -12,7 +19,6 @@ export default function AdminUsers() {
   const [showModal, setShowModal] = useState(false);
   const [creating, setCreating] = useState(false);
 
-  // View Modal
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [viewLoading, setViewLoading] = useState(false);
@@ -154,7 +160,7 @@ export default function AdminUsers() {
                 <td>
                   <div className="user-info-cell">
                     <img
-                      src={user.profile_picture || "https://via.placeholder.com/40"}
+                      src={getImageUrl(user.profile_picture)}
                       alt={user.full_name}
                       style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
                     />
@@ -220,7 +226,6 @@ export default function AdminUsers() {
                   onChange={(e) => setNewUser({...newUser, full_name: e.target.value})}
                   placeholder="Enter full name"
                   required
-                  autoComplete="name"
                 />
               </div>
 
@@ -232,7 +237,6 @@ export default function AdminUsers() {
                   onChange={(e) => setNewUser({...newUser, email: e.target.value})}
                   placeholder="user@example.com"
                   required
-                  autoComplete="email"
                 />
               </div>
 
@@ -243,7 +247,6 @@ export default function AdminUsers() {
                   value={newUser.phone_number}
                   onChange={(e) => setNewUser({...newUser, phone_number: e.target.value})}
                   placeholder="+91 9876543210"
-                  autoComplete="tel"
                 />
               </div>
 
@@ -255,7 +258,6 @@ export default function AdminUsers() {
                   onChange={(e) => setNewUser({...newUser, password: e.target.value})}
                   placeholder="Min 6 characters"
                   required
-                  autoComplete="new-password"
                 />
               </div>
 
@@ -288,7 +290,7 @@ export default function AdminUsers() {
               <div className="modal-body">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                   <img
-                    src={selectedUser.user?.profile_picture || "https://via.placeholder.com/80"}
+                    src={getImageUrl(selectedUser.user?.profile_picture)}
                     alt={selectedUser.user?.full_name}
                     style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover' }}
                   />

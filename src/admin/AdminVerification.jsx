@@ -5,6 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "../styles/adminverification.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const getImageUrl = (path) => {
+  if (!path) return "https://via.placeholder.com/40";
+  return path.startsWith("http")? path : `${API_BASE_URL}${path}`;
+};
+
 export default function AdminVerification() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -27,8 +33,8 @@ export default function AdminVerification() {
     try {
       setLoading(true);
       const params = {};
-      if (status !== "All Status") params.status = status.toLowerCase();
-      if (religion !== "All Religion") params.religion = religion;
+      if (status!== "All Status") params.status = status.toLowerCase();
+      if (religion!== "All Religion") params.religion = religion;
 
       const res = await getAllProfilesAdminAPI(params);
       setProfiles(res.data || []);
@@ -108,7 +114,7 @@ export default function AdminVerification() {
   const handleStatusUpdate = async () => {
     if (!selectedProfile) return;
 
-    if (editStatus === 'rejected' && !rejectReason.trim()) {
+    if (editStatus === 'rejected' &&!rejectReason.trim()) {
       toast.error("Rejection reason required");
       return;
     }
@@ -210,7 +216,7 @@ export default function AdminVerification() {
                     <td data-label="Profile">
                       <div className="profile-user-cell">
                         <img
-                          src={profile.profile_picture || "https://via.placeholder.com/40"}
+                          src={getImageUrl(profile.profile_picture)}
                           alt={profile.full_name}
                           onError={(e) => e.target.src = "https://via.placeholder.com/40"}
                         />
@@ -229,14 +235,14 @@ export default function AdminVerification() {
                     <td data-label="Location">
                       <span className="cell-value">
                         {[profile.district || profile.city, profile.state || profile.country]
-                         .filter(Boolean)
-                         .join(", ") || "N/A"}
+                        .filter(Boolean)
+                        .join(", ") || "N/A"}
                       </span>
                     </td>
 
                     <td data-label="Aadhaar">
                       <div className="cell-value">
-                        {profile.has_aadhaar ? (
+                        {profile.has_aadhaar? (
                           <span className={`aadhaar-status-tag ${profile.aadhaar_status || 'pending'}`}>
                             <FaIdCard />
                             {profile.aadhaar_status || "pending"}
@@ -269,10 +275,10 @@ export default function AdminVerification() {
                         {profile.verification_status === 'pending' && (
                           <button
                             className="action-btn check"
-                            title={profile.has_aadhaar ? "Verify" : "Aadhaar not uploaded"}
+                            title={profile.has_aadhaar? "Verify" : "Aadhaar not uploaded"}
                             onClick={() => handleVerify(profile.id, profile.has_aadhaar)}
                             disabled={!profile.has_aadhaar || actionLoading === profile.id}
-                            style={{ opacity: profile.has_aadhaar ? 1 : 0.3 }}
+                            style={{ opacity: profile.has_aadhaar? 1 : 0.3 }}
                           >
                             <FaCheck />
                           </button>
@@ -367,7 +373,7 @@ export default function AdminVerification() {
                 onClick={handleStatusUpdate}
                 disabled={actionLoading === selectedProfile.id}
               >
-                {actionLoading === selectedProfile.id ? 'Updating...' : 'Update Status'}
+                {actionLoading === selectedProfile.id? 'Updating...' : 'Update Status'}
               </button>
             </div>
           </div>

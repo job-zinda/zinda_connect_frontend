@@ -5,6 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "../styles/adminProfiles.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const getImageUrl = (path) => {
+  if (!path) return "https://via.placeholder.com/40";
+  return path.startsWith("http")? path : `${API_BASE_URL}${path}`;
+};
+
 export default function AdminProfiles() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -21,8 +27,8 @@ export default function AdminProfiles() {
     try {
       setLoading(true);
       const params = {};
-      if (status !== "All Status") params.status = status.toLowerCase();
-      if (religion !== "All Religion") params.religion = religion;
+      if (status!== "All Status") params.status = status.toLowerCase();
+      if (religion!== "All Religion") params.religion = religion;
 
       const res = await getAllProfilesAdminAPI(params);
       setProfiles(res.data || []);
@@ -61,7 +67,7 @@ export default function AdminProfiles() {
       p.full_name?.toLowerCase().includes(search.toLowerCase()) ||
       p.user?.email?.toLowerCase().includes(search.toLowerCase()) ||
       p.email?.toLowerCase().includes(search.toLowerCase()) ||
-      p.phone?.toLowerCase().includes(search.toLowerCase()) 
+      p.phone?.toLowerCase().includes(search.toLowerCase())
     );
   });
 
@@ -114,7 +120,7 @@ export default function AdminProfiles() {
                 <tr>
                   <th>Profile</th>
                   <th>Basic Info</th>
-                  <th>Phone</th> 
+                  <th>Phone</th>
                   <th>Religion</th>
                   <th>Location</th>
                   <th>Actions</th>
@@ -127,7 +133,7 @@ export default function AdminProfiles() {
                     <td data-label="Profile">
                       <div className="profile-user-cell">
                         <img
-                          src={profile.profile_picture || "https://via.placeholder.com/40"}
+                          src={getImageUrl(profile.profile_picture)}
                           alt={profile.full_name}
                           onError={(e) => e.target.src = "https://via.placeholder.com/40"}
                         />
@@ -141,7 +147,6 @@ export default function AdminProfiles() {
                       <span className="cell-value">{getGenderText(profile.gender)}, {profile.height || "N/A"}</span>
                     </td>
 
-                    
                     <td data-label="Phone">
                       <span className="cell-value">{profile.phone || "N/A"}</span>
                     </td>
@@ -153,8 +158,8 @@ export default function AdminProfiles() {
                     <td data-label="Location">
                       <span className="cell-value">
                         {[profile.district || profile.city, profile.state || profile.country]
-                         .filter(Boolean)
-                         .join(", ") || "N/A"}
+                        .filter(Boolean)
+                        .join(", ") || "N/A"}
                       </span>
                     </td>
 
@@ -181,5 +186,3 @@ export default function AdminProfiles() {
     </div>
   );
 }
-
-

@@ -32,9 +32,10 @@ import {
   getAdminStatsAPI,
   getRecentRegistrationsAPI,
 } from "../apis/Api";
-import { color } from "chart.js/helpers";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip);
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 function StatCard({ title, value, percentage, icon }) {
   return (
@@ -111,6 +112,11 @@ export default function AdminDashboard() {
     return { senderName, senderImg, messageText, timestamp, roomId };
   };
 
+  const getImageUrl = (path) => {
+    if (!path) return "";
+    return path.startsWith("http")? path : `${API_BASE_URL}${path}`;
+  };
+
   const chartData = {
     labels: stats.user_growth_labels || [],
     datasets: [{
@@ -142,17 +148,17 @@ export default function AdminDashboard() {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { 
-          color: '#868e96', 
+        ticks: {
+          color: '#868e96',
           font: { size: 10 },
           maxRotation: 0,
           autoSkip: true,
-          maxTicksLimit: 7 
+          maxTicksLimit: 7
         }
       },
      y: {
       beginAtZero: true,
-      suggestedMax: stats.total_users + 5
+      suggestedMax: (stats.total_users || 10) + 5
     }
     }
   };
@@ -182,39 +188,39 @@ export default function AdminDashboard() {
           <>
             <div className="admin-header">
               <h1 style={{color: '#ffff'}}>Dashboard</h1>
-              <span style={{ fontSize: '12px', background: 'rgba(255,255,255,0.2)', padding: '4px 12px', borderRadius: '20px' , color: '#ffff'}}>Admin Panel</span>
+              <span style={{ fontSize: '12px', background: 'rgba(255,255,255,0.2)', padding: '4px 12px', borderRadius: '20px', color: '#ffff'}}>Admin Panel</span>
             </div>
 
             {loading? (
               <p style={{ textAlign: 'center', padding: '40px', color: '#868e96' }}>Loading Dashboard Data...</p>
             ) : (
               <>
-                
+
                 <div className="stats-grid">
                   <StatCard
                     title="Total Users"
-                    value={stats.total_users ?? 0}
+                    value={stats.total_users?? 0}
                     percentage="+18.6%"
                     icon={<FaUsers />}
                   />
 
                   <StatCard
                     title="Active Matches"
-                    value={stats.active_matches ?? stats.total_matches ?? 0}
+                    value={stats.active_matches?? stats.total_matches?? 0}
                     percentage="+12.4%"
                     icon={<FaHeart />}
                   />
 
                   <StatCard
                     title="Messages"
-                    value={stats.messages_sent ?? stats.total_messages ?? 0}
+                    value={stats.messages_sent?? stats.total_messages?? 0}
                     percentage="+22.1%"
                     icon={<FaComments />}
                   />
 
                   <StatCard
                     title="Revenue"
-                    value={`₹${stats.revenue ?? stats.total_revenue ?? 0}`}
+                    value={`₹${stats.revenue?? stats.total_revenue?? 0}`}
                     percentage="+20.8%"
                     icon={<FaIndianRupeeSign />}
                   />
@@ -228,7 +234,7 @@ export default function AdminDashboard() {
                         <option>Last 30 Days</option>
                       </select>
                     </div>
-                  
+
                     <div style={{ height: '180px', padding: '10px 0' }}>
                       {stats.user_growth_data?.length > 0? (
                         <Line data={chartData} options={chartOptions} />
@@ -251,7 +257,7 @@ export default function AdminDashboard() {
                           <div key={user.id} className="item-row">
                             <div className="user-meta">
                               {user.profile_picture || user.image? (
-                                <img src={user.profile_picture || user.image} alt={user.full_name} className="avatar-placeholder" style={{ objectFit: 'cover' }} />
+                                <img src={getImageUrl(user.profile_picture || user.image)} alt={user.full_name} className="avatar-placeholder" style={{ objectFit: 'cover' }} />
                               ) : (
                                 <div className="avatar-placeholder">{user.full_name?.charAt(0) || user.username?.charAt(0) || "U"}</div>
                               )}
@@ -306,7 +312,7 @@ export default function AdminDashboard() {
                             <div className="user-meta" style={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
                                 {m.user_one_img? (
-                                  <img src={m.user_one_img} alt="" className="avatar-placeholder" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
+                                  <img src={getImageUrl(m.user_one_img)} alt="" className="avatar-placeholder" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
                                 ) : (
                                   <div className="avatar-placeholder" style={{ width: '32px', height: '32px', fontSize: '11px' }}>{m.user_one_name?.charAt(0)}</div>
                                 )}
@@ -316,7 +322,7 @@ export default function AdminDashboard() {
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, justifyContent: 'flex-end' }}>
                                 <span style={{ fontSize: '12px', fontWeight: '500', maxWidth: '65px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'right' }}>{m.user_two_name}</span>
                                 {m.user_two_img? (
-                                  <img src={m.user_two_img} alt="" className="avatar-placeholder" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
+                                  <img src={getImageUrl(m.user_two_img)} alt="" className="avatar-placeholder" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
                                 ) : (
                                   <div className="avatar-placeholder" style={{ width: '32px', height: '32px', fontSize: '11px' }}>{m.user_two_name?.charAt(0)}</div>
                                 )}
@@ -349,7 +355,7 @@ export default function AdminDashboard() {
                               <div className="user-meta">
                                 {senderImg? (
                                   <img
-                                    src={senderImg.startsWith('http')? senderImg : `http://127.0.0.1:8000${senderImg}`}
+                                    src={getImageUrl(senderImg)}
                                     alt={senderName}
                                     className="avatar-placeholder"
                                     style={{ objectFit: 'cover', width: '40px', height: '40px', borderRadius: '50%' }}
@@ -395,10 +401,10 @@ export default function AdminDashboard() {
                           <div className="story-body">
                             <div className="story-images">
                               {displayStories[currentStoryIndex].image_one && (
-                                <img src={displayStories[currentStoryIndex].image_one.startsWith('http')? displayStories[currentStoryIndex].image_one : `http://127.0.0.1:8000${displayStories[currentStoryIndex].image_one}`} alt="Partner 1" className="story-image" />
+                                <img src={getImageUrl(displayStories[currentStoryIndex].image_one)} alt="Partner 1" className="story-image" />
                               )}
                               {displayStories[currentStoryIndex].image_two && (
-                                <img src={displayStories[currentStoryIndex].image_two.startsWith('http')? displayStories[currentStoryIndex].image_two : `http://127.0.0.1:8000${displayStories[currentStoryIndex].image_two}`} alt="Partner 2" className="story-image" />
+                                <img src={getImageUrl(displayStories[currentStoryIndex].image_two)} alt="Partner 2" className="story-image" />
                               )}
                             </div>
                             <p className="story-text">

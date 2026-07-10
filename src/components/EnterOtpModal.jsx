@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { verifyOTPAPI } from "../apis/Api"; // ✅ localhost maatti
+import { verifyOTPAPI } from "../apis/Api"; 
 import "../styles/otpModal.css";
 import ResetPasswordModal from "./ResetPasswordModal";
 
