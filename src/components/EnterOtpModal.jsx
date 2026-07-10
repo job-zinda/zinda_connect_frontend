@@ -4,7 +4,7 @@ import "../styles/otpModal.css";
 import ResetPasswordModal from "./ResetPasswordModal";
 
 export default function EnterOtpModal({ onClose, onBack, email }) {
-  const [otp, setOtp] = useState(["", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [showReset, setShowReset] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
