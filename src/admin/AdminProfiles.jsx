@@ -6,9 +6,11 @@ import { toast } from "react-toastify";
 import "../styles/adminProfiles.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+
+// 🛠️ ഇമേജ് യുആർഎൽ കൂടുതൽ സുരക്ഷിതമാക്കുന്നു
 const getImageUrl = (path) => {
-  if (!path) return "https://via.placeholder.com/40";
-  return path.startsWith("http")? path : `${API_BASE_URL}${path}`;
+  if (!path || path.includes("placeholder") || path === "null" || path === "undefined") return null;
+  return path.startsWith("http") ? path : `${API_BASE_URL}${path}`;
 };
 
 export default function AdminProfiles() {
@@ -27,8 +29,8 @@ export default function AdminProfiles() {
     try {
       setLoading(true);
       const params = {};
-      if (status!== "All Status") params.status = status.toLowerCase();
-      if (religion!== "All Religion") params.religion = religion;
+      if (status !== "All Status") params.status = status.toLowerCase();
+      if (religion !== "All Religion") params.religion = religion;
 
       const res = await getAllProfilesAdminAPI(params);
       setProfiles(res.data || []);
@@ -60,6 +62,12 @@ export default function AdminProfiles() {
 
   const handleView = (id) => {
     navigate(`/profile-details/${id}`);
+  };
+
+  // 🛠️ ഇമേജ് ലോഡ് ആയില്ലെങ്കിൽ അവതാർ കാണിക്കാനുള്ള ഫംഗ്ഷൻ
+  const handleImageError = (e, name) => {
+    e.target.onerror = null;
+    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name || "User")}&background=random&color=fff`;
   };
 
   const filteredProfiles = profiles.filter((p) => {
@@ -135,7 +143,7 @@ export default function AdminProfiles() {
                         <img
                           src={getImageUrl(profile.profile_picture)}
                           alt={profile.full_name}
-                          onError={(e) => e.target.src = "https://via.placeholder.com/40"}
+                          onError={(e) => handleImageError(e, profile.full_name)}
                         />
                         <span className="profile-name-text">
                           {profile.full_name}, {calculateAge(profile.date_of_birth)}

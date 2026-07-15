@@ -5,6 +5,7 @@ import { FaDownload, FaTimes } from "react-icons/fa";
 import "../styles/AdminStories.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const MAX_FILE_SIZE_MB = 10; // ✅ 10MB limit
 
 export default function AdminStories() {
   const [showForm, setShowForm] = useState(false);
@@ -44,6 +45,15 @@ export default function AdminStories() {
     }
   };
 
+  const validateFileSize = (file) => {
+    const fileSizeMB = file.size / 1024 / 1024;
+    if (fileSizeMB > MAX_FILE_SIZE_MB) {
+      toast.error(`Image size ${MAX_FILE_SIZE_MB}MB ൽ കൂടാൻ പാടില്ല. Current: ${fileSizeMB.toFixed(2)}MB`);
+      return false;
+    }
+    return true;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({...formData, [name]: value });
@@ -52,16 +62,21 @@ export default function AdminStories() {
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     const file = files[0];
+    if (!file) return;
+
+    if (!validateFileSize(file)) {
+      e.target.value = ""; // reset input
+      return;
+    }
+
     setFormData({...formData, [name]: file });
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (name === "image_one") setPreviewOne(reader.result);
-        if (name === "image_two") setPreviewTwo(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (name === "image_one") setPreviewOne(reader.result);
+      if (name === "image_two") setPreviewTwo(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   const clearImage = (imageType) => {
@@ -83,7 +98,7 @@ export default function AdminStories() {
       marriage_date: story.marriage_date || "",
       location: story.location || "",
       story_text: story.story_text,
-      image_one: null,
+      image_one: null, // ✅ puthiya file select cheyyan vendi null
       image_two: null
     });
     setPreviewOne(getImageUrl(story.image_one));
@@ -101,8 +116,9 @@ export default function AdminStories() {
       data.append("location", formData.location);
       data.append("story_text", formData.story_text);
 
-      if (formData.image_one) data.append("image_one", formData.image_one);
-      if (formData.image_two) data.append("image_two", formData.image_two);
+      // ✅ File select cheyyitundel mathrame append cheyyu
+      if (formData.image_one instanceof File) data.append("image_one", formData.image_one);
+      if (formData.image_two instanceof File) data.append("image_two", formData.image_two);
 
       if (isEditing) {
         await updateSuccessStoryAPI(editingId, data);
@@ -116,7 +132,11 @@ export default function AdminStories() {
       fetchStories();
     } catch (err) {
       console.error("Submit error:", err);
-      toast.error(isEditing? "Failed to update story." : "Failed to add success story.");
+      if(err.response?.status === 413) {
+        toast.error("File size too large. Max 10MB per image")
+      } else {
+        toast.error(isEditing? "Failed to update story." : "Failed to add success story.");
+      }
     }
   };
 
@@ -166,64 +186,28 @@ export default function AdminStories() {
 
               <div className="form-control">
                 <label>Partner One Name *</label>
-                <input
-                  type="text"
-                  name="partner_one_name"
-                  value={formData.partner_one_name}
-                  required
-                  onChange={handleChange}
-                  placeholder="Enter name"
-                  className="form-input"
-                />
+                <input type="text" name="partner_one_name" value={formData.partner_one_name} required onChange={handleChange} placeholder="Enter name" className="form-input" />
               </div>
 
               <div className="form-control">
                 <label>Partner Two Name *</label>
-                <input
-                  type="text"
-                  name="partner_two_name"
-                  value={formData.partner_two_name}
-                  required
-                  onChange={handleChange}
-                  placeholder="Enter name"
-                  className="form-input"
-                />
+                <input type="text" name="partner_two_name" value={formData.partner_two_name} required onChange={handleChange} placeholder="Enter name" className="form-input" />
               </div>
 
               <div className="form-control">
                 <label>Marriage Date</label>
-                <input
-                  type="date"
-                  name="marriage_date"
-                  value={formData.marriage_date}
-                  onChange={handleChange}
-                  className="form-input"
-                />
+                <input type="date" name="marriage_date" value={formData.marriage_date} onChange={handleChange} className="form-input" />
               </div>
 
               <div className="form-control">
                 <label>Location</label>
-                <input
-                  type="text"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleChange}
-                  placeholder="Enter location"
-                  className="form-input"
-                />
+                <input type="text" name="location" value={formData.location} onChange={handleChange} placeholder="Enter location" className="form-input" />
               </div>
 
               <div className="form-control">
-                <label>Image One</label>
+                <label>Image One - Max {MAX_FILE_SIZE_MB}MB</label>
                 <div className="file-input-wrapper">
-                  <input
-                    type="file"
-                    name="image_one"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    id="image_one"
-                    style={{ display: 'none' }}
-                  />
+                  <input type="file" name="image_one" accept="image/*" onChange={handleFileChange} id="image_one" style={{ display: 'none' }} />
                   <label htmlFor="image_one" className="file-input-btn">
                     {previewOne? 'Change Image' : 'Choose File'}
                   </label>
@@ -231,20 +215,10 @@ export default function AdminStories() {
                     <div className="image-preview-box">
                       <img src={previewOne} alt="Preview One" />
                       <div className="image-preview-actions">
-                        <button
-                          type="button"
-                          className="action-btn view"
-                          onClick={() => downloadImage(previewOne, formData.partner_one_name || 'image_one')}
-                          title="Download"
-                        >
+                        <button type="button" className="action-btn view" onClick={() => downloadImage(previewOne, formData.partner_one_name || 'image_one')} title="Download">
                           <FaDownload />
                         </button>
-                        <button
-                          type="button"
-                          className="action-btn times"
-                          onClick={() => clearImage('image_one')}
-                          title="Remove"
-                        >
+                        <button type="button" className="action-btn times" onClick={() => clearImage('image_one')} title="Remove">
                           <FaTimes />
                         </button>
                       </div>
@@ -254,16 +228,9 @@ export default function AdminStories() {
               </div>
 
               <div className="form-control">
-                <label>Image Two</label>
+                <label>Image Two - Max {MAX_FILE_SIZE_MB}MB</label>
                 <div className="file-input-wrapper">
-                  <input
-                    type="file"
-                    name="image_two"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    id="image_two"
-                    style={{ display: 'none' }}
-                  />
+                  <input type="file" name="image_two" accept="image/*" onChange={handleFileChange} id="image_two" style={{ display: 'none' }} />
                   <label htmlFor="image_two" className="file-input-btn">
                     {previewTwo? 'Change Image' : 'Choose File'}
                   </label>
@@ -271,20 +238,10 @@ export default function AdminStories() {
                     <div className="image-preview-box">
                       <img src={previewTwo} alt="Preview Two" />
                       <div className="image-preview-actions">
-                        <button
-                          type="button"
-                          className="action-btn view"
-                          onClick={() => downloadImage(previewTwo, formData.partner_two_name || 'image_two')}
-                          title="Download"
-                        >
+                        <button type="button" className="action-btn view" onClick={() => downloadImage(previewTwo, formData.partner_two_name || 'image_two')} title="Download">
                           <FaDownload />
                         </button>
-                        <button
-                          type="button"
-                          className="action-btn times"
-                          onClick={() => clearImage('image_two')}
-                          title="Remove"
-                        >
+                        <button type="button" className="action-btn times" onClick={() => clearImage('image_two')} title="Remove">
                           <FaTimes />
                         </button>
                       </div>
@@ -295,15 +252,7 @@ export default function AdminStories() {
 
               <div className="form-control form-textarea-control">
                 <label>Story Text *</label>
-                <textarea
-                  name="story_text"
-                  rows="4"
-                  value={formData.story_text}
-                  required
-                  onChange={handleChange}
-                  placeholder="Write their success story..."
-                  className="form-textarea"
-                ></textarea>
+                <textarea name="story_text" rows="4" value={formData.story_text} required onChange={handleChange} placeholder="Write their success story..." className="form-textarea"></textarea>
               </div>
             </div>
 

@@ -1,15 +1,16 @@
 /* =========================
-   ADMIN STORIES / MANAGE CSS
+   ADMIN STORIES / MANAGE CSS - FULLY RESPONSIVE
 ========================= */
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .admin-manage-content {
   width: 100%;
   min-height: 100vh;
-  padding: 34px;
+  padding: clamp(18px, 4vw, 34px);
   background:
     radial-gradient(circle at top left, rgba(233, 22, 98, 0.08), transparent 30%),
     linear-gradient(135deg, #fff7fb 0%, #f8fafc 48%, #ffffff 100%);
@@ -18,7 +19,7 @@
 
 .page-header {
   margin-bottom: 24px;
-  padding: 24px;
+  padding: clamp(16px, 3vw, 24px);
   border-radius: 26px;
   background: rgba(255, 255, 255, 0.96);
   border: 1px solid #edf0f5;
@@ -27,14 +28,16 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
 .page-header h2 {
   margin: 0;
   color: #07122e;
-  font-size: clamp(26px, 3vw, 40px);
+  font-size: clamp(22px, 4vw, 40px);
   font-weight: 950;
   letter-spacing: -0.8px;
+  line-height: 1.2;
 }
 
 .add-btn {
@@ -49,6 +52,7 @@
   cursor: pointer;
   box-shadow: 0 14px 30px rgba(233, 22, 98, 0.24);
   transition: 0.28s ease;
+  white-space: nowrap;
 }
 
 .add-btn:hover {
@@ -66,13 +70,13 @@
 }
 
 .form-card {
-  padding: 28px;
+  padding: clamp(16px, 3vw, 28px);
 }
 
 .form-header {
   margin: 0 0 24px;
   color: #07122e;
-  font-size: 24px;
+  font-size: clamp(20px, 3vw, 24px);
   font-weight: 950;
 }
 
@@ -141,6 +145,7 @@
   cursor: pointer;
   border: 1.5px dashed #ff9fc4;
   transition: 0.25s ease;
+  width: 100%;
 }
 
 .file-input-btn:hover {
@@ -163,7 +168,7 @@
 
 .image-preview-box img {
   width: 100%;
-  height: 230px;
+  height: clamp(160px, 40vw, 230px);
   object-fit: cover;
   display: block;
 }
@@ -174,6 +179,7 @@
   right: 12px;
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .form-actions {
@@ -182,6 +188,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .action-btn,
@@ -195,6 +202,7 @@
   font-weight: 950;
   cursor: pointer;
   transition: 0.25s ease;
+  white-space: nowrap;
 }
 
 .action-btn-primary {
@@ -239,6 +247,7 @@
 .table-container {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .table-container table {
@@ -277,6 +286,16 @@
   background: #fff8fb;
 }
 
+/* =========================
+   RESPONSIVE BREAKPOINTS
+========================= */
+
+@media (max-width: 992px) {
+  .page-header {
+    gap: 12px;
+  }
+}
+
 @media (max-width: 768px) {
   .admin-manage-content {
     padding: 92px 14px 28px !important;
@@ -291,6 +310,7 @@
 
   .add-btn {
     width: 100%;
+    justify-content: center;
   }
 
   .form-card {
@@ -300,15 +320,19 @@
 
   .form-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .form-actions {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .action-btn-primary,
-  .action-btn-secondary {
+  .action-btn-secondary,
+  .action-btn {
     width: 100%;
+    justify-content: center;
   }
 
   .table-container {
@@ -349,6 +373,11 @@
     justify-content: space-between;
     gap: 14px;
     text-align: right;
+    align-items: center;
+  }
+
+  .table-container td:last-child {
+    border-bottom: 0;
   }
 
   .table-container td::before {
@@ -356,6 +385,7 @@
     color: #07122e;
     font-weight: 950;
     text-align: left;
+    flex-shrink: 0;
   }
 }
 
@@ -364,18 +394,58 @@
     padding: 86px 10px 24px !important;
   }
 
+  .page-header {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
   .page-header h2 {
-    font-size: 25px;
+    font-size: 22px;
   }
 
   .form-card {
     padding: 16px;
+    border-radius: 18px;
+  }
+
+  .form-input {
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .form-textarea {
+    min-height: 120px;
+    font-size: 14px;
+  }
+
+  .add-btn, .file-input-btn {
+    min-height: 48px;
+    font-size: 13px;
+  }
+
+  .action-btn, .action-btn-primary, .action-btn-secondary {
+    min-height: 44px;
+    font-size: 13px;
   }
 
   .table-container td {
     align-items: flex-start;
     flex-direction: column;
     text-align: left;
+    gap: 6px;
+  }
+
+  .image-preview-box {
+    min-height: 150px;
+  }
+}
+
+@media (max-width: 360px) {
+  .page-header h2 {
+    font-size: 20px;
+  }
+  .admin-manage-content {
+    padding: 80px 8px 20px !important;
   }
 }
 

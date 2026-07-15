@@ -27,37 +27,47 @@ export default function Login() {
     e.preventDefault();
     setError("");
 
-    if (!loginInput ||!password) {
+    if (!loginInput || !password) {
       setError("Please enter email and password");
       return;
     }
 
     setLoading(true);
     try {
-      
       const res = await loginAPI({
-        email: loginInput.toLowerCase(),
+        email: loginInput.toLowerCase().trim(),
         password: password,
-      });
+    });
+
+      console.log("LOGIN RESPONSE:", res.data); 
+
+      // ✅ 1. Response il tokens undaano check cheyyu
+      if (!res.data.access || !res.data.refresh) {
+        throw new Error(res.data.detail || "Login failed. No tokens received");
+      }
 
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
-      localStorage.setItem("role", res.data.role);
-      localStorage.setItem("email", res.data.email);
-      localStorage.setItem("profile_type", res.data.profile_type);
-      localStorage.setItem("user_id", res.data.user_id);
+      localStorage.setItem("role", res.data.role || "user");
+      localStorage.setItem("email", res.data.email || loginInput);
+      localStorage.setItem("profile_type", res.data.profile_type || "");
+      localStorage.setItem("user_id", res.data.user_id || "");
 
+      // ✅ 2. Role base aayi redirect
       if (res.data.role === "admin") {
         navigate("/admin");
       } else {
         navigate("/");
       }
+
     } catch (err) {
-      console.log("LOGIN ERROR:", err.response?.data);
+      console.log("LOGIN ERROR:", err.response?.data || err.message);
       if (err.response?.status === 401) {
         setError("Invalid email or password");
       } else if (err.response?.data?.detail) {
         setError(err.response.data.detail);
+      } else if (err.message) {
+        setError(err.message); 
       } else {
         setError("Server Error. Try again.");
       }
@@ -100,7 +110,7 @@ export default function Login() {
             <div className="login-input">
               <img src={lockIcon} alt="lock" className="input-icon" />
               <input
-                type={showPassword? "text" : "password"}
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -112,7 +122,7 @@ export default function Login() {
                 className="eye-btn"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                <img src={showPassword? eyeIconopen : eyeCloseIcon} alt="toggle password" />
+                <img src={showPassword ? eyeIconopen : eyeCloseIcon} alt="toggle password" />
               </button>
             </div>
 
@@ -125,7 +135,7 @@ export default function Login() {
             </button>
 
             <button type="submit" className="login-btn" disabled={loading}>
-              {loading? "Logging in..." : "Login"}
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
 

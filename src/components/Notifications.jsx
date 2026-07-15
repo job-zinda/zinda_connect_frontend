@@ -21,14 +21,8 @@ const Notifications = () => {
   const fetchSettings = async () => {
     try {
       const res = await getNotificationsAPI();
-      setSettings({
-        messages: res.data.messages?? true,
-        favourites: res.data.favourites?? true,
-        profile_views: res.data.profile_views?? true,
-        likes: res.data.likes?? true,
-        updates_news: res.data.updates_news?? false,
-        email_notifications: res.data.email_notifications?? true,
-      });
+      // ✅ API ninnu vannathu direct aayi set cheyyu
+      setSettings(res.data);
     } catch (err) {
       console.error("Fetch error:", err);
     } finally {
@@ -43,9 +37,9 @@ const Notifications = () => {
   const handleSaveChanges = async () => {
     setSaving(true);
     try {
-      await updateNotificationsAPI(settings);
+      const res = await updateNotificationsAPI(settings);
+      setSettings(res.data); // ✅ Save cheythu kazhinju API thirichu thanna data veendum set cheyyu
       alert("നോട്ടിഫിക്കേഷൻ ക്രമീകരണങ്ങൾ മാറ്റിയെഴുതി!");
-      await fetchSettings();
     } catch (err) {
       console.error("Save error:", err);
       alert("സേവ് ചെയ്യാൻ സാധിച്ചില്ല.");

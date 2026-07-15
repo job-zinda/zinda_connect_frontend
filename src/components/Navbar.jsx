@@ -6,7 +6,9 @@ import "../styles/navbar.css";
 import { getProfileAPI, getChatRoomsAPI, getAdminProfileAPI } from "../apis/Api";
 import NotificationBell from './NotificationBell';
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+// const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const envUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const API_BASE_URL = envUrl.endsWith("/") ? envUrl.slice(0, -1) : envUrl;
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -72,7 +74,7 @@ export default function Navbar() {
 
   const getUserName = () => {
     if (isAdmin) return currentUser?.full_name || "Admin";
-    return currentUser?.full_name || currentUser?.child_name || "My Profile";
+    return currentUser?.full_name || currentUser?.child_name || "Profile";
   };
 
   return (
@@ -91,17 +93,16 @@ export default function Navbar() {
         <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
         <Link to="/matches" onClick={() => setMenuOpen(false)}>Matches</Link>
 
-        {/* ✅ ICONS KALANJU - TEXT MATHRAM */}
         {!isAdmin && (
           <>
             <Link to="/settings/get-verified" onClick={() => setMenuOpen(false)}>
               Get Verified
             </Link>
             <Link to="/settings/favourites" onClick={() => setMenuOpen(false)}>
-              My Favourites
+              Favourites
             </Link>
             <Link to="/settings/likes" onClick={() => setMenuOpen(false)}>
-              My Likes
+              Likes
             </Link>
           </>
         )}
