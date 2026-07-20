@@ -116,11 +116,11 @@ export default function Home() {
   useEffect(() => {
     if (ads.length > 1) {
       const currentAd = ads[currentAdIndex];
-      if (currentAd && currentAd.file_type === 'video') return;
-      const interval = setInterval(() => {
-        setCurrentAdIndex((prevIndex) => (prevIndex + 1) % ads.length);
-      }, 5000);
-      return () => clearInterval(interval);
+      if (currentAd?.file_type === 'video') return; 
+      const timer = setTimeout(() => {
+      setCurrentAdIndex((prevIndex) => (prevIndex + 1) % ads.length);
+    }, 30000);
+      return () => clearTimeout(timer);
     }
   }, [ads, currentAdIndex]);
 
@@ -198,9 +198,13 @@ export default function Home() {
           <div className="ad-container">
             {ads[currentAdIndex].file_type === 'video' ? (
               <div style={{ position: "relative", width: "100%", overflow: "hidden" }}>
+               
                 <video
                   src={ads[currentAdIndex].file_url}
-                  autoPlay muted playsInline onEnded={handleVideoEnded}
+                  autoPlay 
+                  controls
+                  playsInline 
+                  onEnded={handleVideoEnded}
                   onClick={() => ads[currentAdIndex].link_url && window.open(ads[currentAdIndex].link_url, "_blank")}
                   style={{ width: "100%", maxHeight: "420px", objectFit: "cover", display: "block", cursor: ads[currentAdIndex].link_url ? "pointer" : "default" }}
                 />
@@ -220,7 +224,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* ✅ BUTTON BANNER IN ADIYIL */}
+        {/*  BUTTON BANNER  */}
         <div className="cta-wrapper">
           <button className="cta-find-btn" onClick={handleOpenSearch}>
             Find Your Perfect Match
