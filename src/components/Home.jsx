@@ -119,7 +119,7 @@ export default function Home() {
       if (currentAd?.file_type === 'video') return; 
       const timer = setTimeout(() => {
       setCurrentAdIndex((prevIndex) => (prevIndex + 1) % ads.length);
-    }, 30000);
+    }, 5000);
       return () => clearTimeout(timer);
     }
   }, [ads, currentAdIndex]);
