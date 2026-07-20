@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaTrash, FaEdit, FaEye, FaToggleOn, FaToggleOff, FaUpload } from "react-icons/fa";
+import { FaTrash, FaEdit, FaEye, FaToggleOn, FaToggleOff, FaUpload, FaVolumeUp } from "react-icons/fa";
 import { getAllAdsAPI, createAdAPI, deleteAdAPI, updateAdAPI } from "../apis/Api";
 import "../styles/adminBanners.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
-const MAX_VIDEO_SIZE_MB = 30;
+const MAX_VIDEO_SIZE_MB = 50; 
 const MAX_IMAGE_SIZE_MB = 10;
 
 const getImageUrl = (path) => {
@@ -13,11 +13,9 @@ const getImageUrl = (path) => {
 };
 
 const getFileType = (file, url = "") => {
-  // 1. File object undenkil athu check cheyyu
   if (file?.type) {
     return file.type.startsWith('video/')? 'video' : 'image';
   }
-  // 2. URL ninnu extension vechu check cheyyu
   const videoExts = ['mp4', 'webm', 'mov', 'avi', 'mkv'];
   const ext = url.split('.').pop()?.toLowerCase().split('?')[0];
   if (videoExts.includes(ext)) return 'video';
@@ -81,7 +79,6 @@ export default function AdminBanners() {
     formData.append("title", adTitle);
     if (selectedFile) {
       formData.append("file", selectedFile);
-      // ✅ file_type backend il save cheyyan vendi
       formData.append("file_type", getFileType(selectedFile));
     }
     if (adLink) formData.append("link_url", adLink);
@@ -100,7 +97,7 @@ export default function AdminBanners() {
     } catch (err) {
       console.error(err);
       if(err.response?.status === 413) {
-        alert("File size too large. Video: Max 30MB, Image: Max 10MB")
+        alert("File size too large. Video: Max 50MB, Image: Max 10MB")
       } else if(err.response?.data) {
         alert(Object.values(err.response.data).flat().join("\n"))
       } else {
@@ -149,7 +146,7 @@ export default function AdminBanners() {
         <div className="banners-title-row">
           <div>
             <h2>{editId? "Edit Ad Banner" : "Upload Home Page Ad Banner"}</h2>
-            <p>Image: Max {MAX_IMAGE_SIZE_MB}MB / Video: Max {MAX_VIDEO_SIZE_MB}MB</p>
+            <p>Image: Max {MAX_IMAGE_SIZE_MB}MB / Video with Audio: Max {MAX_VIDEO_SIZE_MB}MB</p>
           </div>
         </div>
 
@@ -183,6 +180,7 @@ export default function AdminBanners() {
               </button>
               {selectedFile && <p style={{fontSize: "13px", color: "#667085", marginTop: "8px"}}>
                 Selected: {selectedFile.name} - {(selectedFile.size / 1024 / 1024).toFixed(2)}MB
+                {selectedFile.type.startsWith('video/') && <span style={{color: "#e91662"}}> <FaVolumeUp /> Audio Supported</span>}
               </p>}
             </div>
 
@@ -213,7 +211,6 @@ export default function AdminBanners() {
               </thead>
               <tbody>
                 {banners.map((banner) => {
-                  // ✅ file_type illenkil URL vechu kandupidikanam
                   const type = banner.file_type || getFileType(null, banner.file_url);
                   return (
                     <tr key={banner.id}>
@@ -221,14 +218,23 @@ export default function AdminBanners() {
                         {type === 'image'? (
                           <img src={getImageUrl(banner.file_url)} alt={banner.title} className="banner-thumb" />
                         ) : (
-                          <video src={getImageUrl(banner.file_url)} className="banner-thumb" muted playsInline />
+                         
+                          <video
+                            src={getImageUrl(banner.file_url)}
+                            className="banner-thumb"
+                            controls
+                            playsInline
+                          />
                         )}
                       </td>
                       <td data-label="Title" className="banner-title-cell">
                         <h4>{banner.title}</h4>
                       </td>
                       <td data-label="Type">
-                        <span style={{textTransform: 'capitalize', fontWeight: '900'}}>{type}</span>
+                        <span style={{textTransform: 'capitalize', fontWeight: '900', display: 'flex', alignItems: 'center', gap: '5px'}}>
+                          {type}
+                          {type === 'video' && <FaVolumeUp style={{color: '#e91662'}} />}
+                        </span>
                       </td>
                       <td data-label="Link">
                         {banner.link_url?
