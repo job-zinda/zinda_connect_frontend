@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { getPreferencesAPI, updatePreferencesAPI } from "../apis/Api";
+import { getPreferencesAPI, updatePreferencesAPI, deleteAccountAPI } from "../apis/Api";
 
 const AccountPreferences = () => {
   const [preferences, setPreferences] = useState({
     language: "English",
-    distance: "Anywhere", 
-    age_preference: "All Ages", 
-    show_me: "Everyone", 
+    distance: "Anywhere",
+    age_preference: "All Ages",
+    show_me: "Everyone",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     getPreferencesAPI()
-    .then((res) => {
+     .then((res) => {
         setPreferences({
           language: res.data.language || "English",
           distance: res.data.distance || "Anywhere",
@@ -22,7 +23,7 @@ const AccountPreferences = () => {
         });
         setLoading(false);
       })
-    .catch((err) => {
+     .catch((err) => {
         console.error(err);
         setLoading(false);
       });
@@ -40,31 +41,45 @@ const AccountPreferences = () => {
       window.location.reload();
     } catch (err) {
       console.error(err);
-      alert("Failed to save.");
+      alert("Failed to save preferences.");
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDeleteAccount = () => {
-    if (window.confirm("Are you sure you want to permanently delete your account? This cannot be undone.")) {
-      alert("Account deletion request submitted.");
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Are you sure you want to permanently delete your account? This cannot be undone.")) {
+      return;
+    }
+    if (!window.confirm("Final confirmation: All your data will be deleted permanently. Continue?")) {
+      return;
+    }
+    try {
+      setDeleting(true);
+      await deleteAccountAPI();
+      alert("Account deleted successfully.");
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = "/login";
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.detail || "Failed to delete account.");
+    } finally {
+      setDeleting(false);
     }
   };
 
   if (loading) return <p style={{ padding: "20px" }}>Loading...</p>;
 
   return (
-    <>
     <div className="settings-content" style={{ flex: 1 }}>
-
       <div className="settings-header">
         <div>
           <h1>Account Preferences</h1>
           <p>Customize your app experience.</p>
         </div>
         <button className="save-btn" onClick={handleSaveChanges} disabled={saving}>
-          {saving? 'Saving...' : 'Save Changes'}
+          {saving? "Saving..." : "Save Changes"}
         </button>
       </div>
 
@@ -119,17 +134,23 @@ const AccountPreferences = () => {
           </div>
         </div>
 
-        <button type="button" className="preference-link-row danger" onClick={handleDeleteAccount}>
-          <div>
-            <h4>Delete Account</h4>
-            <p>Permanently delete your account and all data</p>
-          </div>
-          <span>›</span>
-        </button>
+        <div style={{ marginTop: "30px", borderTop: "1px solid #eee", paddingTop: "20px" }}>
+          <button
+            type="button"
+            className="preference-link-row danger"
+            onClick={handleDeleteAccount}
+            disabled={deleting}
+            style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", background: "none", border: "1px solid #ff4d4f", borderRadius: "8px", padding: "12px 16px", cursor: "pointer" }}
+          >
+            <div style={{ textAlign: "left" }}>
+              <h4 style={{ color: "#ff4d4f", margin: 0 }}>{deleting? "Deleting..." : "Delete Account"}</h4>
+              <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#666" }}>Permanently delete your account and all data</p>
+            </div>
+            <span style={{ color: "#ff4d4f", fontSize: "20px" }}>›</span>
+          </button>
+        </div>
       </div>
-      </div>
-
-    </>
+    </div>
   );
 };
 

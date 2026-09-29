@@ -5,7 +5,7 @@ import personIcon from "../assets/image copy.png";
 import lockIcon from "../assets/image copy 2.png";
 import eyeCloseIcon from "../assets/image copy 4.png";
 import emailIcon from "../assets/image copy 6.png";
-import phoneIcon from "../assets/image copy 5.png"; 
+import phoneIcon from "../assets/image copy 5.png";
 import referral from "../assets/image copy 9.png";
 
 import API, { registerAPI, updateProfileTypeAPI } from "../apis/Api";
@@ -22,7 +22,7 @@ export default function CreateAccountModal({ onClose }) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "", 
+    phone: "",
     password: "",
     confirm_password: "",
     referral_id: ""
@@ -30,7 +30,7 @@ export default function CreateAccountModal({ onClose }) {
 
   const handleChange = (e) => {
     setFormData({
-     ...formData,
+    ...formData,
       [e.target.name]: e.target.value
     });
     setError("");
@@ -38,17 +38,30 @@ export default function CreateAccountModal({ onClose }) {
 
   const handleRegister = async (e) => {
     if (e) e.preventDefault();
+
+    // 1. Frontend validation
+    if (formData.password!== formData.confirm_password) {
+      setError("Passwords do not match");
+      return;
+    }
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
+
     setLoading(true);
     setError("");
     try {
-      const res = await registerAPI({
-        name: formData.name,
-        email: formData.email,
+      const payload = {
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase(),
         phone: formData.phone,
         password: formData.password,
         confirm_password: formData.confirm_password,
-        referral_id: formData.referral_id?.trim() || null
-      });
+        referral_id: formData.referral_id.trim() === ""? null : formData.referral_id.trim() 
+      };
+
+      const res = await registerAPI(payload);
 
       console.log("REGISTER SUCCESS:", res);
 
@@ -66,7 +79,8 @@ export default function CreateAccountModal({ onClose }) {
       console.log("REGISTER ERROR:", err);
       setError(
         err.response?.data?.email?.[0] ||
-        err.response?.data?.phone?.[0] || 
+        err.response?.data?.phone?.[0] ||
+        err.response?.data?.referral_id?.[0] || 
         err.response?.data?.password?.[0] ||
         err.response?.data?.detail ||
         err.response?.data?.error ||
@@ -152,7 +166,7 @@ export default function CreateAccountModal({ onClose }) {
                 />
               </div>
 
-             
+              {/* PHONE */}
               <div className="modal-input">
                 <span className="modal-icon">
                   <img src={phoneIcon} alt="" />
@@ -163,7 +177,7 @@ export default function CreateAccountModal({ onClose }) {
                   placeholder="Phone Number"
                   value={formData.phone}
                   onChange={(e) => setFormData({
-                   ...formData,
+                  ...formData,
                     phone: e.target.value.replace(/\D/g, '').slice(0, 15)
                   })}
                   disabled={loading}
