@@ -72,7 +72,9 @@ export const updateProfileAPI = (formData) =>
   API.patch("profile/", formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
-export const deleteAccountAPI = () => API.delete("/auth/account/delete/");
+export const deleteAccountAPI = () => {
+  return API.delete("account/delete/");
+};
 
 // Password Reset
 export const sendOTPAPI = (data) => API.post("forgot-password/send-otp/", data);
