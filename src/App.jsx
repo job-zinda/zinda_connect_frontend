@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Home from "./components/Home";
 import Login from "./components/Login";
 import ProfileDetails from "./components/ProfileDetails";
+import DeleteAccount from "./components/DeleteAccount";
 import ProfileCreationController from "./components/ProfileCreationController";
 import AdminDashboard from "./admin/AdminDashboard";
 import Navbar from "./components/Navbar";
@@ -83,6 +84,8 @@ function App() {
         <Route path="/settings/favourites" element={<Settings />} />
         <Route path="/settings/likes" element={<Settings />} />
         <Route path="/settings/help-support" element={<Settings />} />
+        <Route path="/delete-account" element={<DeleteAccount />} />
+        <Route path="/account-deletion" element={<DeleteAccount />} />
 
         {/* Standalone Pages - if needed */}
         <Route path="/favourites" element={<FavouriteProfiles />} />
